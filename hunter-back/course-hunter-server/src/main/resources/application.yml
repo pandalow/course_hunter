@@ -1,0 +1,53 @@
+server.port: 9999
+
+spring:
+  application:
+    name: course-hunter-server
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  # Cache service setting
+  cache:
+    cache-names: commonCache
+  datasource:
+    url: jdbc:mysql://${hunt.datasource.mysql.host}:${hunt.datasource.mysql.port}/${hunt.datasource.mysql.database}
+    username: ${hunt.datasource.mysql.username}
+    password: ${hunt.datasource.mysql.password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL8Dialect
+  data:
+    redis:
+      host: ${hunt.datasource.redis.host}
+      port: ${hunt.datasource.redis.port}
+      password: ${hunt.datasource.redis.password}
+      database: ${hunt.datasource.redis.database}
+      time-to-live: 60000
+  # email service
+  mail:
+    host: ${hunt.mail.host}
+    port: ${hunt.mail.port}
+    username: ${hunt.mail.username}
+    password: ${hunt.mail.password}
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: ${hunt.mail.smtp.ssl.trust}
+          auth: ${hunt.mail.smtp.auth}
+          starttls:
+            enable: ${hunt.mail.smtp.starttls.enable}
+          connectiontimeout: ${hunt.mail.smtp.connectiontimeout}
+          timeout: ${hunt.mail.smtp.timeout}
+          writetimeout: ${hunt.mail.smtp.writetimeout}
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path : /swagger-ui.html
+
