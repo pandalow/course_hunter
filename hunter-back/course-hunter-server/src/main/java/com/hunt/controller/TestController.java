@@ -22,9 +22,5 @@ public class TestController {
 //        cool = courseService.getCourseVector();
 //        return cool;
 //    }
-    @GetMapping("/findcourse")
-    public Result<PageResult<CourseCardVO>> searchCourse(@RequestParam("query") String query) {
-        PageResult<CourseCardVO> courses = courseService.getCourseByQuery(query);
-        return Result.success(courses);
-    }
+
 }

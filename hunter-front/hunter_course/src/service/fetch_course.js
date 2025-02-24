@@ -14,6 +14,16 @@ export const fetchCourses = async (page=1,pageSize=5,search='') => {
     return data
 }
 
+export const searchCourses = async (query) => {
+    const response = await axios.get('http://localhost:9999/course/find',{
+        params: {
+            query: query
+        }
+    })
+    const data = response.data.data.records
+    return data
+}
+
 // mock data
 // export const fetchCourses = async () => {
 //     const response = {

@@ -9,6 +9,7 @@ import com.hunt.result.Result;
 import com.hunt.service.CourseCommentService;
 import com.hunt.service.CourseRatingService;
 import com.hunt.service.CourseService;
+import com.hunt.vo.CourseCardVO;
 import com.hunt.vo.CourseCommentVO;
 import com.hunt.vo.CourseRatingVO;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,7 @@ public class CourseController {
     public Result getCourses(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer pageSize,
-            @RequestParam(required = false,defaultValue = "") String search,
+            @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection,
             @RequestParam(required = false, defaultValue = "commentsCount") String sortBy) {
 
@@ -79,6 +80,12 @@ public class CourseController {
         //If there is no match in redis, store the returned data.
         PageResult courses = courseService.getCourses(pageQueryDTO);
 
+        return Result.success(courses);
+    }
+
+    @GetMapping("/find")
+    public Result<PageResult<CourseCardVO>> searchCourse(@RequestParam("query") String query) {
+        PageResult<CourseCardVO> courses = courseService.getCourseByQuery(query);
         return Result.success(courses);
     }
 
