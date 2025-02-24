@@ -18,4 +18,6 @@ public interface CourseDAO extends JpaRepository<Course, Long> {
 
     @Query("select c.title from Course c "   )
     List<String> findAllCourseTitle();
+
+
 }

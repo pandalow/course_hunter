@@ -8,6 +8,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Configuration of Interceptor
@@ -42,6 +44,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*") // all headers
                 .allowCredentials(true) // all for the cookies
                 .maxAge(3600);
+    }
+
+    @Bean
+    public WebClient.Builder getWebClientBuilder(){
+        return WebClient.builder();
     }
 }
 

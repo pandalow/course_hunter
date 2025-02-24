@@ -22,7 +22,8 @@ public class InterceptorExcludePathConstant {
     // HomePage Course relate paths
     private static final String[] COURSE_PATHS ={
             "/course/**",
-            "/filter/**"
+            "/filter/**",
+            "/test/**"
     };
 
     /**

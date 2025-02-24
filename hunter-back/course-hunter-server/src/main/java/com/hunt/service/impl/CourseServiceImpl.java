@@ -7,18 +7,22 @@ import com.hunt.dao.TeacherDAO;
 import com.hunt.dto.CoursePageQueryDTO;
 import com.hunt.entity.Course;
 import com.hunt.entity.CourseUGC;
+import com.hunt.entity.ResultItem;
 import com.hunt.result.PageResult;
 import com.hunt.service.CourseService;
 import com.hunt.utils.CopyUtil;
 import com.hunt.vo.CourseCardVO;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,9 @@ public class CourseServiceImpl implements CourseService {
     private TeacherDAO teacherDAO;
     @Autowired
     private CourseUGCDAO courseUGCDAO;
+    @Autowired
+    private FastApiClientServiceImpl fastApiClientServiceImpl;
+
 
     @Override
     public Course getCourseById(Long id) {
@@ -85,14 +92,36 @@ public class CourseServiceImpl implements CourseService {
         return new PageResult<CourseCardVO>(courses.getNumberOfElements(), courseCardVOs);
     }
 
-    public List<String> findAllCoursesTitle() {
-        return courseDAO.findAllCourseTitle();
+    @Override
+    public PageResult<CourseCardVO> getCourseByQuery(String query){
+       List<ResultItem> results =
+               fastApiClientServiceImpl
+                       .getFastApiResult(query)
+                       .map(fastApiResponse -> fastApiResponse.getResults())
+                       .block();
+       if (results == null || results.isEmpty()){
+           return new PageResult<CourseCardVO>(0,new ArrayList<CourseCardVO>());
+        }
+
+
+       ArrayList<Course> courses = new ArrayList<>();
+       for(ResultItem p : results){
+           Course course = getCourseById(p.getId());
+           courses.add(course);
+       }
+
+         List<CourseCardVO> courseCardVOs = courses
+                .stream()
+                .map(course -> {
+                     CourseCardVO cardVO = CopyUtil.copyProperties(course, CourseCardVO.class);
+                     cardVO.setTeachers(teacherDAO.getTeacherNamesByCourses(course.getId()));
+                     return cardVO;
+                }).collect(Collectors.toList());
+
+       return new PageResult<CourseCardVO>(courseCardVOs.size(), courseCardVOs);
     }
 
-    public SearchResults<Course> searchCourses(String query) {
-        List<String> allTitles = findAllCoursesTitle();
 
 
 
-    }
 }
