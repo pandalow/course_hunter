@@ -1,49 +1,121 @@
 # Course Hunter - Back End
 
+## 📝 Project Overview
+**Course Hunter** is a **Spring Boot-based** backend project designed to help students quickly browse courses available in their institution and obtain useful information such as course descriptions, ratings, and instructors.  
+The project provides **RESTful APIs**, supporting **course search, instructor details**, and uses **Redis** for caching optimization to enhance system performance.
 
+---
 
-## Outline
+## 🚀 Technology Stack & Dependencies
+| **Dependency**                 | **Description**                                | **Version** | **Official Website** |
+|---------------------------------|----------------------------------------------|------------|---------------------|
+| **Java**                        | Core programming language                    | 21.0       | [Oracle Java](https://www.oracle.com/java/technologies/javase) |
+| **Spring Boot**                 | Web application framework                    | 3.2.5      | [Spring Boot](https://spring.io/projects/spring-boot) |
+| **Lombok**                      | Java code enhancement library                | 1.18.32    | [Lombok](https://github.com/rzwitserloot/lombok) |
+| **Swagger-UI**                  | API documentation generation tool            | 2.5.0      | [Swagger UI](https://github.com/swagger-api/swagger-ui) |
+| **Hibernate**                   | Object-Relational Mapping (ORM)              | Latest     | [Hibernate](http://hibernate.org) |
+| **MySQL**                       | Relational database                          | Latest     | [MySQL](https://www.mysql.com/) |
+| **Redis**                       | In-memory database for caching               | 7.2.5      | [Redis](https://redis.io/) |
+| **Lettuce**                     | Scalable Redis client                        | 6.3.2      | [Lettuce](https://lettuce.io/) |
+| **Spring-redis-starter**        | Spring framework Redis client                | 3.3.0      | [Spring Redis](https://spring.io/projects/spring-data-redis) |
+| **Gson**                        | Java object to JSON conversion library       | 32.1.2     | [Gson](https://github.com/google/gson) |
 
-Consturcting...
+---
 
+## 📂 Project Structure
+```
+course-hunter-backend
+│── course-hunter-server      # Server module (Handles VIEW & CONTROLLER)
+│   ├── anno                  # Annotation package
+│   ├── aspect                # Aspect-Oriented Programming (AOP)
+│   ├── config                # Configuration files
+│   ├── controller            # REST API controllers
+│   ├── handler               # Global exception handling
+│   ├── interceptor           # User validation filters
+│   ├── dao                   # Data Access Object (DAO) for database interactions
+│   ├── service               # Business logic layer (connects Controller and DAO)
+│── course-hunter-pojo        # Entity module (Database mapping & Frontend interactions)
+│   ├── entity                # Database entities
+│   ├── DTO                   # Data Transfer Objects (for HTTP requests)
+│   ├── VO                    # View Objects (for frontend responses)
+│── course-hunter-common      # Common utilities
+│   ├── constant              # Global constants
+│   ├── context               # Thread information processing
+│   ├── enumeration           # Enum definitions
+│   ├── exception             # Custom exception handling
+│   ├── properties            # Configuration properties
+│   ├── result                # Response result handling (pagination & success/failure messages)
+│   ├── utils                 # Utility classes and custom helper functions
+```
 
+---
 
-## Dependency
+## 🏗️ How to Run Locally
+### **1️⃣  Clone the Repository**
+```sh
+git clone https://github.com/your-repo/course-hunter-backend.git
+cd course-hunter-backend
+```
 
-| Dependencies         | Explaination                                                 | Version | Official website                                |
-| -------------------- | ------------------------------------------------------------ | ------- | ----------------------------------------------- |
-| Java                 | basic language                                               | 21.0    | https://www.oracle.com/java/technologies/javase |
-| SpringBoot           | Web Application Development Framework                        | 3.2.5   | https://spring.io/projects/spring-boot          |
-| Lombok               | Java Language Enhancement Library                            | 1.18.32 | https://github.com/rzwitserloot/lombok          |
-| Swagger-UI           | API Documentation Generation Tool                            | 2.5.0   | https://github.com/swagger-api/swagger-ui       |
-| Hibernate            | ORM                                                          |         | http://hibernate.org                            |
-| MySQL                | My SQL Connector                                             |         |                                                 |
-| Redis                | in-memory database                                           | 7.2.5   | https://redis.io/                               |
-| Lettuce              | scalable [Redis](https://redis.io/) client                   | 6.3.2   | https://lettuce.io/                             |
-| Spring-redis-starter | Spring framework client of redis                             | 3.3.0   |                                                 |
-| Gson                 | can be used to convert Java Objects into their JSON representation | 32.1.2  | https://github.com/google/gson                  |
+### **2️⃣  Configure the Database**
+- Create a **MySQL** database:
+```sql
+CREATE DATABASE course_hunter DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+- Modify `application.yml`:
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/course_hunter?useSSL=false&serverTimezone=UTC
+    username: your_mysql_username
+    password: your_mysql_password
+  redis:
+    host: localhost
+    port: 6379
+```
 
-## Structure
+### **3️⃣  Start Redis**
+```sh
+redis-server
+```
 
-1. Hunter back [Parent module]
-   1. course-hunter-server [Server module: response for VIEW & CONTROLLER] 
-      1. `anno` :  Annotation package
-      2. `aspect`:  AOP package [Aspect of programming in Spring Framework]
-      3. `config` : Configuration package
-      4. `controller` Controller of  REST Api [Handling HttpRequest]
-      5. `handler` : Globally exception handler
-      6. `Interceptor` Filter or Interceptor for handling User validation
-      7. `dao`  DAO package [Handling Database CRUD]
-      8. `service`  Service package [Hadling Service between Controller layer & DAO layer] 
-   2. course-hunter-pojo [Entity module: represent of Entity in the database & Entities that interact with the front end] 
-      1. `entity`  Entity in the database [1-to-1 correspondence] 
-      2. `DTO`  The full entity requested in the httpRequest [Can be used to transfer data in service and dao]
-      3. `VO` The returned data entities can be wrapped and responded to by the front-end.
-   3. course-hunter-common []
-      1. `constant` Package for storing constants
-      2. `context`  Used to process thread information
-      3. `enumeration`  Enum information package
-      4. `exception`  User-defined exception handling
-      5. `properties`  Tool Class Configuration Class Information Storage
-      6. `result`  Return result information, including paging information and general result information.
-      7. `utils`  Tool class methods, providing custom tooling capabilities
+### **4️⃣  Run the Project**
+```sh
+mvn spring-boot:run
+```
+If you are using **IntelliJ IDEA**, you can directly run `CourseHunterApplication.java`.
+
+---
+
+## 📖 API Documentation (Swagger-UI)
+After starting the project, visit:
+```
+http://localhost:8080/swagger-ui/
+```
+You can test all API endpoints here.
+
+---
+
+## 🛠️ Contribution Guidelines
+We welcome contributions to **Course Hunter**! You can:
+1. **Fork this repository**
+2. **Create a feature branch** (`git checkout -b feature-xxx`)
+3. **Commit your changes** (`git commit -m 'Added xxx feature'`)
+4. **Push to your branch** (`git push origin feature-xxx`)
+5. **Submit a Pull Request (PR)**
+
+---
+
+## 🏆 Contributors
+- **[@pandalow](https://github.com/pandalow)**
+- **[@fernweh-3](https://github.com/fernweh-3)**
+
+---
+
+## 📜 License
+This project is open-sourced under the **MIT License**, meaning you are free to use and modify it.  
+Check the full license terms here: [LICENSE](./LICENSE)
+
+---
+
+🎯 **Now you are ready to run the `Course Hunter` backend! 🚀**
