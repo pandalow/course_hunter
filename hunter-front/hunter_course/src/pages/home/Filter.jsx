@@ -1,27 +1,31 @@
 import Button from "../../components/common_components/Button";
-import {useState} from 'react';
+import { useState } from 'react';
 
-export default function Filter({setSearch}) {
+export default function Filter({ setSearch }) {
     const [query, setQuery] = useState('');
 
-    // handleSearch is used to set the search
-    function handleSearch(){
+    function handleSearch() {
         setSearch(query);
     }
 
-    return <div>
-        <div className="flex flex-row items-center justify-center border-2 border-gray-300 rounded-lg p-2 hover:border-gray-400 hover:bg-gray-100">
-            <input 
-            type="text" 
-            placeholder="Key Words" 
-            className="w-full h-full p-2" 
-            onChange={(e) => setQuery(e.target.value)} 
-            />
+    return (
+        <div className="flex items-center justify-center p-4">
+            <div className="flex items-center w-full max-w-lg border-2 border-gray-700 rounded-lg p-2 bg-black space-x-4">
+                {/* 搜索输入框 */}
+                <input 
+                    type="text" 
+                    placeholder="Search courses..." 
+                    className="w-full bg-gray-900 text-white placeholder-gray-500 p-2 rounded-lg focus:outline-none" 
+                    onChange={(e) => setQuery(e.target.value)} 
+                />
 
-            <Button 
-            text="Search" 
-            onClick={handleSearch} 
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full" />
+                {/* 搜索按钮 */}
+                <Button 
+                    text="Search" 
+                    onClick={handleSearch} 
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300" 
+                />
+            </div>
         </div>
-    </div>
+    );
 }

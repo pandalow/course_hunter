@@ -1,15 +1,22 @@
-import {useState} from 'react'
+export default function PageNumber({ page, setPage }) {
+    const totalPages = 10;
+    const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-export default function PageNumber({page, setPage}) {
-    const pageNumber = [1,2,3,4,5,6,7,8,9,10]
     return (
-
-        <div className="text-white text-xl font-bold hover:text-gray-300">
-            {pageNumber.map((page) => (
-                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full" key={page} onClick={() => setPage(page)}>
-                    <span className="text-gray-800">{page}</span>
+        <div className="flex space-x-2 mt-6">
+            {pageNumbers.map((num) => (
+                <button
+                    key={num}
+                    className={`px-4 py-2 rounded-lg font-semibold transition duration-300 ${
+                        page === num
+                            ? 'bg-blue-500 text-white shadow-md'
+                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    }`}
+                    onClick={() => setPage(num)}
+                >
+                    {num}
                 </button>
             ))}
         </div>
-    )
+    );
 }

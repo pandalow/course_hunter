@@ -1,14 +1,15 @@
-import { Outlet } from "react-router-dom";
-import MainNavigation from "../components/MainNavigation";
-import Footer from "../components/Footer"; 
+import { Outlet } from 'react-router-dom';
+import MainNavigation from '../components/MainNavigation';
+import Footer from '../components/Footer';
 
 export default function RootLayout() {
-    return (  
-        <div className="flex flex-col min-h-screen">
+    return (
+        <div className="bg-black text-white min-h-screen flex flex-col">
             <MainNavigation />
-            <div className="flex-grow">
+            <main className="flex-grow container mx-auto p-6">
                 <Outlet />
-            </div>
+            </main>
             <Footer />
-        </div>)
+        </div>
+    );
 }

@@ -1,30 +1,29 @@
-import {Link} from 'react-router-dom'
-import {useNavigate} from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-export default function CourseCard({course}) {
-    const navigate = useNavigate();
-
-    const handleNavigate = () => {
-        navigate(`/course/${course.id}`);
-    }
-
+export default function CourseCard({ course }) {
     return (
-            <div className="bg-white shadow-md rounded-lg flex p-6 m-4 w-2/3 hover:bg-gray-100" onClick={handleNavigate}>
-                <img className="w-32 h-32 object-cover rounded-lg" src={course.image} alt={course.title} />
-                <div className="ml-6 flex flex-col justify-between flex-1">
-                    <h2 className="text-xl font-semibold mb-2">{course.title}</h2>
-                    <p className="text-gray-600 mb-1">{course.countryName}</p>
-                    <p className="text-gray-600 mb-1">{course.code}</p>
-                    <p className="text-gray-600 mb-1">{course.semester}</p>
-                    <p className="text-gray-600 mb-1">{course.description}</p>
-                    <p className="text-gray-600 mb-1">{course.rating}</p>
-                    <p className="text-gray-600 mb-1">{course.institutionName}</p>
-                    {course.comments ? (
-                        <p className="text-gray-600 mb-1">{course.comments}</p>
-                    ) : (
-                        <p className="text-gray-600 mb-1">No comments</p>
-                    )}
+        <Link to={`/course/${course.id}`} className="block">
+            <div className="bg-gray-900 text-white shadow-md rounded-2xl flex flex-col p-4 gap-4 border border-gray-700 hover:shadow-xl hover:-translate-y-1 transition duration-300 cursor-pointer w-full min-h-[260px]">
+                
+                {/* 课程图片 */}
+                <img 
+                    className="w-24 h-24 object-cover rounded-lg mx-auto"
+                    src={course.image || '/default_course.png'}  
+                    alt={course.title} 
+                />
+
+                {/* 课程信息 */}
+                <div className="flex flex-col justify-between flex-1">
+                    <h2 className="text-lg font-bold text-white text-center">{course.title}</h2>
+                    <div className="text-gray-400 text-sm space-y-1 text-center">
+                        <p className="font-medium">{course.countryName} / {course.code} / {course.semester || 'Not specified'}</p>
+                        <p className="text-gray-500">{course.institutionName || 'Not specified'}</p>
+                        <p className="line-clamp-2 text-gray-300">{course.description || 'No description available'}</p>
+                        <p className="text-yellow-400 text-lg">⭐ {course.rating}</p>
+                        <p className="text-gray-500">{course.comments || 'No comments'}</p>
+                    </div>
                 </div>
             </div>
-    )   
+        </Link>
+    );
 }

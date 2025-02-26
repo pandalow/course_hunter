@@ -57,14 +57,14 @@ public class CourseController {
      * @return Card information which display on the home page
      */
     @GetMapping
-    @Cacheable(cacheNames = "commonCache",
-            key = "'page:' + #page " +
-                    "+ '-pageSize:' " +
-                    "+ #pageSize + '-countryId:' " +
-                    "+ #sortDirection + '-sortBy:' + #sortBy")
+//    @Cacheable(cacheNames = "commonCache",
+//            key = "'page:' + #page " +
+//                    "+ '-pageSize:' " +
+//                    "+ #pageSize + '-countryId:' " +
+//                    "+ #sortDirection + '-sortBy:' + #sortBy")
     public Result getCourses(
             @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "20") Integer pageSize,
+            @RequestParam(required = false, defaultValue = "12") Integer pageSize,
             @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection,
             @RequestParam(required = false, defaultValue = "commentsCount") String sortBy) {
