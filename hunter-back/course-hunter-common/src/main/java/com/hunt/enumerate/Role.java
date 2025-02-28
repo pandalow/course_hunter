@@ -1,2 +1,5 @@
-package com.hunt.enumerate;public class Role {
+package com.hunt.enumerate;
+
+public enum Role {
+    User, Admin
 }

@@ -1,21 +1,13 @@
 package com.hunt.controller;
 
-import com.hunt.dto.CourseCommentPageQueryDTO;
 import com.hunt.dto.CoursePageQueryDTO;
-import com.hunt.dto.UserTokenDTO;
 import com.hunt.entity.Course;
 import com.hunt.result.PageResult;
 import com.hunt.result.Result;
-import com.hunt.service.CourseCommentService;
-import com.hunt.service.CourseRatingService;
 import com.hunt.service.CourseService;
 import com.hunt.vo.CourseCardVO;
-import com.hunt.vo.CourseCommentVO;
-import com.hunt.vo.CourseRatingVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,10 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
     @Autowired
     private CourseService courseService;
-    @Autowired
-    private CourseCommentService courseCommentService;
-    @Autowired
-    private CourseRatingService courseRatingService;
 
     /**
      * Get course by ID, url {id} represent the resources of database
@@ -65,14 +53,12 @@ public class CourseController {
     public Result getCourses(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "12") Integer pageSize,
-            @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection,
             @RequestParam(required = false, defaultValue = "commentsCount") String sortBy) {
 
         CoursePageQueryDTO pageQueryDTO = CoursePageQueryDTO.builder()
                 .page(page)
                 .pageSize(pageSize)
-                .search(search)
                 .sortDirection(sortDirection)
                 .sortBy(sortBy)
                 .build();
@@ -87,33 +73,5 @@ public class CourseController {
     public Result<PageResult<CourseCardVO>> searchCourse(@RequestParam("query") String query) {
         PageResult<CourseCardVO> courses = courseService.getCourseByQuery(query);
         return Result.success(courses);
-    }
-
-    @GetMapping("/{id}/comments")
-    public Result<PageResult<CourseCommentVO>> queryPagedTreeCommentsByCourseId(@PathVariable Long id, @RequestParam(required = false, defaultValue = "1") Integer page,
-                                                                                @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                                                @RequestParam(required = false, defaultValue = "asc") String sortDirection,
-                                                                                @RequestParam(required = false, defaultValue = "createTime") String sortBy) {
-        log.info("get comment list: {}", id);
-
-        CourseCommentPageQueryDTO courseCommentPageQueryDTO = CourseCommentPageQueryDTO.builder()
-                .page(page)
-                .pageSize(pageSize)
-                .courseId(id)
-                .sortDirection(sortDirection)
-                .sortBy(sortBy)
-                .build();
-
-
-        PageResult<CourseCommentVO> courseComments = courseCommentService.queryPagedTreeCommentsByCourseId(courseCommentPageQueryDTO);
-        return Result.success(courseComments);
-    }
-
-    @GetMapping("/{id}/rating")
-    public Result<CourseRatingVO> getCourseRatingByCourseId(@PathVariable Long id) {
-        UserTokenDTO userDetails = (UserTokenDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = userDetails.getId();
-        CourseRatingVO courseRatingVO = courseRatingService.getByCourseIdAndUserId(id, userId);
-        return Result.success(courseRatingVO, "Course rating retrieved successfully");
     }
 }

@@ -24,6 +24,14 @@ export const searchCourses = async (query) => {
     return data
 }
 
+export const signIn = async (email, password) => {
+    const response = await axios.post('http://localhost:9999/user/login',{
+        email: email,
+        password: password
+    })
+    return response
+}
+
 // mock data
 // export const fetchCourses = async () => {
 //     const response = {

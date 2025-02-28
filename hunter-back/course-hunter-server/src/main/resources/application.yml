@@ -27,6 +27,17 @@ spring:
       password: ${hunt.datasource.redis.password}
       database: ${hunt.datasource.redis.database}
       time-to-live: 60000
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${hunt.security.oauth2.client-id}
+            client-secret: ${hunt.security.oauth2.client-secret}
+            scope:
+              - email
+              - profile
   # email service
   mail:
     host: ${hunt.mail.host}
