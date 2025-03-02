@@ -2,7 +2,6 @@ package com.hunt.service;
 
 import com.hunt.entity.User;
 import com.hunt.vo.UserVO;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public interface UserService {
 
