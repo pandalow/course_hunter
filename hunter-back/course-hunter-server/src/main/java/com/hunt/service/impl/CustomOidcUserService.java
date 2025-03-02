@@ -2,12 +2,17 @@ package com.hunt.service.impl;
 
 import com.hunt.exception.UnauthorizedActionException;
 import com.hunt.service.UserService;
+import com.hunt.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class CustomOidcUserService extends OidcUserService {
@@ -17,23 +22,24 @@ public class CustomOidcUserService extends OidcUserService {
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-        try {
-            // 先使用默认实现获取 OIDC 用户信息
-            OidcUser oidcUser = super.loadUser(userRequest);
 
-            // 提取 Google 用户的关键信息
-            String googleId = oidcUser.getAttribute("sub");       // Google唯一ID
-            String name = oidcUser.getAttribute("name");          // 用户姓名
-            String email = oidcUser.getAttribute("email");        // 邮箱
-            String avatar = oidcUser.getAttribute("picture");     // 头像URL
+        System.out.println("✅ OAuth 认证成功，执行 loadUser() 方法");
 
-            // 调用用户服务，检查是否已存在此用户，如不存在则创建新用户
-            userService.processOAuthPostLogin(googleId, name, email, avatar);
+        OidcUser oidcUser = super.loadUser(userRequest);
 
-            // 返回 oidcUser 以让 Spring Security 完成认证流程
-            return oidcUser;
-        } catch(Exception e) {
-            throw new UnauthorizedActionException("Cannot process OAuth2 login: " + e.getMessage());
-        }
+        // 提取 Google 用户的关键信息
+        String googleId = oidcUser.getAttribute("sub");
+        String name = oidcUser.getAttribute("name");
+        String email = oidcUser.getAttribute("email");
+        String avatar = oidcUser.getAttribute("picture");
+
+        // **打印日志，确认是否进入 loadUser() 方法**
+        System.out.println("✅ OAuth 登录成功，Google ID: " + googleId);
+        System.out.println("✅ 用户信息: " + name + ", " + email + ", " + avatar);
+
+        // **调用 userService 进行用户存储**
+        userService.processOAuthPostLogin(googleId, name, email, avatar);
+
+        return oidcUser;
     }
 }

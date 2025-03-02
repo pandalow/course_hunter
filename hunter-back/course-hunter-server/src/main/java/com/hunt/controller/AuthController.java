@@ -22,7 +22,7 @@ public class AuthController {
     @GetMapping("/me")
     public Result<UserVO> getCurrentUser(@AuthenticationPrincipal OidcUser oidcUser) {
         if (oidcUser == null){
-            throw new BaseException("User not found");
+            throw new BaseException("OiDcUser is null");
         }
 
         String googleId = oidcUser.getSubject();
@@ -30,6 +30,15 @@ public class AuthController {
 
         return Result.success(user);
     }
+//@GetMapping("/me")
+//public Result<Object> getCurrentUser(@AuthenticationPrincipal OidcUser oidcUser) {
+//    if (oidcUser == null) {
+//        return Result.error("❌ OidcUser is NULL. User not authenticated.");
+//    }
+//
+//    return Result.success(oidcUser.getClaims()); // 直接返回 OIDC 的所有信息，看看后端是否能获取
+//}
+
     @PostMapping("/logout")
     public Result logout() {
         return Result.success("Logout success");

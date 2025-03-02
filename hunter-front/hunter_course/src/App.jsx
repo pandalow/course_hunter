@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import RootLayout from './pages/RootLayout';
 import Home from './pages/Home';
 import CourseDetail from './components/course_components/CourseDetail'; // 新增详情页面
-import SignIn from './pages/signin/SignIn';
 import './App.css';
 
 const router = createBrowserRouter([
@@ -17,10 +16,6 @@ const router = createBrowserRouter([
       {
         path: 'course/:id', // 课程详情路由
         element: <CourseDetail />,
-      },
-      {
-        path: 'signin',
-        element: <SignIn />,
       },
     ],
   },

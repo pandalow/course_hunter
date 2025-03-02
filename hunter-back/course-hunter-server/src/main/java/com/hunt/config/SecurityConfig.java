@@ -14,6 +14,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,22 +26,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // 关闭 CSRF 保护（仅适用于 REST API）
+                .cors(withDefaults()) // 启用 CORS
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/course/find**").authenticated() // /auth/** 路径需要认证
-                        .requestMatchers("/","/course**", "/login**", "/oauth2/**", "/error","/auth/**").permitAll() // 允许访问的路径
-                        .anyRequest().authenticated() // 其他请求需要认证
+                        .requestMatchers("/auth/me", "/course/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .oidcUserService(customOidcUserService) // 使用自定义 OIDC 用户服务
+                                .oidcUserService(customOidcUserService)
                         )
-                        .defaultSuccessUrl("/", true) // 登录成功后跳转
+                        .successHandler((request, response, authentication) -> {
+                            response.setContentType("application/json");
+                            response.getWriter().write("{ \"status\": \"success\" }");
+                        })
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/").permitAll()
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setContentType("application/json");
+                            response.getWriter().write("{ \"status\": \"logout\" }");
+                        })
                 );
-
         return http.build();
     }
     @Bean
@@ -47,7 +54,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true); // 允许 Cookie 传递
-        config.setAllowedOrigins(List.of("http://localhost:5174")); // 允许前端访问
+        config.setAllowedOrigins(List.of("http://localhost:5173")); // 允许前端访问
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         source.registerCorsConfiguration("/**", config);

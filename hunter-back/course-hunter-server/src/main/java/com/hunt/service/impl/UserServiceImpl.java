@@ -57,8 +57,7 @@ public class UserServiceImpl implements UserService {
                         user.getGoogleId(),
                         user.getEmail(),
                         user.getName(),
-                        user.getAvatar(),
-                        user.getRole()
+                        user.getAvatar()
                 )).orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 }

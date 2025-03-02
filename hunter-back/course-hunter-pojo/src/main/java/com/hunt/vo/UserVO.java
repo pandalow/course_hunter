@@ -15,5 +15,4 @@ public class UserVO {
     private String email;
     private String name;
     private String avatar;
-    private Role role;
 }
