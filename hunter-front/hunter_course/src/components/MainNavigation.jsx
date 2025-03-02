@@ -1,30 +1,58 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 
 export default function MainNavigation() {
     const [user, setUser] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // 组件加载时，尝试获取当前登录用户信息
-        fetch("http://localhost:9999/auth/me")
-            .then(response => response.ok ? response.json() : null)
-            .then(data => setUser(data))
-            .catch(() => setUser(null));
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            fetchUserProfile(token);
+        }
     }, []);
 
+    const fetchUserProfile = (token) => {
+        fetch("http://localhost:9999/oauth/me", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.ok ? response.json() : Promise.reject(response))
+            .then(data => {
+                setUser(data);
+            })
+            .catch(() => {
+                setUser(null);
+                localStorage.removeItem("accessToken"); // 无效 token 清除
+            });
+    };
+
     const handleLogin = () => {
-        window.location.href = "http://localhost:9999/oauth2/authorization/google"; // Google OAuth 登录
+        window.location.href = "http://localhost:9999/oauth/render"; // Google OAuth 登录
     };
 
     const handleLogout = () => {
-        fetch("http://localhost:9999/auth/logout", { method: "POST" })
-            .then(() => {
-                setUser(null);
-                window.location.reload();
-            });
+        localStorage.removeItem("accessToken"); // 清除 Token
+        setUser(null);
+        navigate("/"); // 返回首页
     };
+
+    // 监听 URL 变化，解析 accessToken（适用于 OAuth 回调）
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("accessToken");
+
+        if (token) {
+            localStorage.setItem("accessToken", token); // 存储 token
+            fetchUserProfile(token);
+            navigate("/"); // 去掉 URL 参数
+        }
+    }, [navigate]);
 
     return (
         <header className="bg-black shadow-md border-b border-gray-700">
@@ -47,13 +75,11 @@ export default function MainNavigation() {
                 {/* User Section */}
                 {user ? (
                     <div className="relative group">
-                        {/* 头像 */}
                         <img 
                             src={user.avatar} 
                             alt="User Avatar" 
                             className="w-10 h-10 rounded-full cursor-pointer"
                         />
-                        {/* 用户下拉菜单 */}
                         <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 hidden group-hover:block">
                             <p className="px-4 py-2 text-gray-700">{user.name}</p>
                             <p className="px-4 py-2 text-sm text-gray-500">{user.email}</p>

@@ -5,10 +5,11 @@ import com.hunt.entity.User;
 import com.hunt.service.UserService;
 import com.hunt.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +17,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserDAO userRepository;
 
+    private final StringRedisTemplate redisTemplate;
+    private static final String TOKEN_PREFIX = "auth:token:";
+
     @Override
-    public void processOAuthPostLogin(String googleId, String name, String email, String avatarUrl) {
+    public UserVO processOAuthPostLogin(String googleId, String name, String email, String avatarUrl) {
+
         Optional<User> userOptional = userRepository.findByGoogleId(googleId);
 
         if (userOptional.isEmpty()) {
@@ -28,8 +33,10 @@ public class UserServiceImpl implements UserService {
             newUser.setName(name);
             newUser.setAvatar(avatarUrl);
             userRepository.save(newUser);
+
+            return new UserVO(newUser.getId(), googleId, email, name, avatarUrl);
         } else {
-            // 如果用户已存在，检查是否需要更新信息
+            // 获取已有用户
             User existUser = userOptional.get();
             boolean isUpdated = false;
 
@@ -43,21 +50,35 @@ public class UserServiceImpl implements UserService {
             }
 
             if (isUpdated) {
-                userRepository.save(existUser); // 仅在信息有变更时更新数据库
+                userRepository.save(existUser);
             }
+
+            return new UserVO(existUser.getId(), existUser.getGoogleId(), existUser.getEmail(), existUser.getName(), existUser.getAvatar());
         }
     }
 
     @Override
     public UserVO getUserByGoogleId(String googleId) {
-        Optional<User> userOptional = userRepository.findByGoogleId(googleId);
-        return userOptional.map(
-                user -> new UserVO(
+        return userRepository.findByGoogleId(googleId)
+                .map(user -> new UserVO(
                         user.getId(),
                         user.getGoogleId(),
                         user.getEmail(),
                         user.getName(),
                         user.getAvatar()
-                )).orElseThrow(() -> new NoSuchElementException("User not found"));
+                ))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+
+    @Override
+    public void saveAccessToken(String googleId, String accessToken) {
+        redisTemplate.opsForValue().set(TOKEN_PREFIX + accessToken, googleId, 1, TimeUnit.DAYS); // 1 小时过期
+    }
+
+    @Override
+    public Optional<String> getGoogleIdByAccessToken(String accessToken) {
+        String googleId = redisTemplate.opsForValue().get(TOKEN_PREFIX + accessToken);
+        return Optional.ofNullable(googleId);
     }
 }

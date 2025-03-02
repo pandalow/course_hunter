@@ -27,36 +27,9 @@ spring:
       password: ${hunt.datasource.redis.password}
       database: ${hunt.datasource.redis.database}
       time-to-live: 60000
-
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${hunt.security.oauth2.client-id}
-            client-secret: ${hunt.security.oauth2.client-secret}
-            scope:
-              - email
-              - profile
-  # email service
-  mail:
-    host: ${hunt.mail.host}
-    port: ${hunt.mail.port}
-    username: ${hunt.mail.username}
-    password: ${hunt.mail.password}
-
-    properties:
-      mail:
-        smtp:
-          ssl:
-            trust: ${hunt.mail.smtp.ssl.trust}
-          auth: ${hunt.mail.smtp.auth}
-          starttls:
-            enable: ${hunt.mail.smtp.starttls.enable}
-          connectiontimeout: ${hunt.mail.smtp.connectiontimeout}
-          timeout: ${hunt.mail.smtp.timeout}
-          writetimeout: ${hunt.mail.smtp.writetimeout}
-
+justAuth:
+  ClientId:
+    google:
 # swagger-ui custom path
 springdoc:
   swagger-ui:

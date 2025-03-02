@@ -40,7 +40,7 @@ public class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role",nullable = false)
-    private Role role;
+    private Role role = Role.User;
 
 
     public User(String email) {
