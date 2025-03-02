@@ -75,9 +75,9 @@ public class AuthController {
 
     private AuthRequest getAuthRequest() {
         return new AuthGoogleRequest(AuthConfig.builder()
-                .clientId("234209469090-365ddt4bofoscqjlr8ml8nv4e7f7dpc6.apps.googleusercontent.com")
-                .clientSecret("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")
-                .redirectUri("http://localhost:9999/oauth/callback/google")
+                .clientId("")
+                .clientSecret("")
+                .redirectUri("")
                 .build());
     }
 }
