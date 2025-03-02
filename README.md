@@ -21,6 +21,7 @@
 | **Spring Boot**     | Web application framework                     | 3.2.5       |
 | **Spring Security** | Authentication and authorization              | Latest      |
 | **Hibernate**       | ORM for database interaction                  | Latest      |
+| **JustAuth**       | Auth sdk               | Latest      |
 | **MySQL**          | Relational database                            | Latest      |
 | **Redis**          | In-memory database for caching                 | 7.2.5       |
 | **Lettuce**        | Scalable Redis client                          | 6.3.2       |
