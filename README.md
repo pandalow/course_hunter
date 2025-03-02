@@ -9,6 +9,9 @@
 - 🔐 **Security**: Uses **Spring Security** and JWT for authentication.  
 
 ---
+### Demo
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/c0680ac2-765a-4e58-8fee-fc8311204c6c" />
+
 
 ## 🚀 Tech Stack
 
