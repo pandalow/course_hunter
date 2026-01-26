@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function CourseDetail() {
-    const { id } = useParams(); // 获取 URL 参数中的 course ID
+    const { id } = useParams(); // Get User card
     const navigate = useNavigate();
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);

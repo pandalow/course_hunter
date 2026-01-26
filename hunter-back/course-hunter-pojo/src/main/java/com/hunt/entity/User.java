@@ -1,12 +1,13 @@
 package com.hunt.entity;
 
+import com.hunt.enumerate.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.Instant;
-import com.hunt.enumerate.Role;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User implements Serializable {
     @Id
     @Column(name = "id")
@@ -42,11 +44,9 @@ public class User implements Serializable {
     @Column(name = "role",nullable = false)
     private Role role = Role.User;
 
-
     public User(String email) {
         this.email = email;
     }
-
 
     @PrePersist
     public void onCreate() {

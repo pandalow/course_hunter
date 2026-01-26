@@ -1,4 +1,4 @@
-server.port: 9999
+server.port: 8080
 
 spring:
   application:
@@ -27,9 +27,11 @@ spring:
       password: ${hunt.datasource.redis.password}
       database: ${hunt.datasource.redis.database}
       time-to-live: 60000
-justAuth:
+Auth:
   ClientId:
-    google:
+    google: ${hunt.security.oauth2.client-id}
+    secret: ${hunt.security.oauth2.secret-key}
+    expiration: ${hunt.security.oauth2.expiration}
 # swagger-ui custom path
 springdoc:
   swagger-ui:

@@ -120,8 +120,4 @@ public class CourseServiceImpl implements CourseService {
 
        return new PageResult<CourseCardVO>(courseCardVOs.size(), courseCardVOs);
     }
-
-
-
-
 }

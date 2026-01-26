@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.hunt")
 @EnableCaching // Using Spring Cache to manage Redis
 @EnableTransactionManagement // Transactional management
 

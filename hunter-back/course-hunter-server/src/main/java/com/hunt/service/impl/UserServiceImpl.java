@@ -1,84 +1,80 @@
 package com.hunt.service.impl;
 
+import com.hunt.constant.ExceptionMessageConstant;
 import com.hunt.dao.UserDAO;
 import com.hunt.entity.User;
+import com.hunt.enumerate.Role;
 import com.hunt.service.UserService;
+import com.hunt.utils.JwtUtils;
 import com.hunt.vo.UserVO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserDAO userRepository;
+    @Autowired
+    private UserDAO userRepository;
 
-    private final StringRedisTemplate redisTemplate;
-    private static final String TOKEN_PREFIX = "auth:token:";
+    @Autowired
+    private GoogleIdTokenVerifier verifier;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
-    public UserVO processOAuthPostLogin(String googleId, String name, String email, String avatarUrl) {
+    @Transactional
+    public UserVO handleGoogleOAuth(String code) throws Exception {
+        /*
+         * Achieve Google OAuth verified processing by credential(TokenId)
+         * @args: credential
+         * @return: UserVO(include JWT)
+         */
 
-        Optional<User> userOptional = userRepository.findByGoogleId(googleId);
+        // Verified credential code;
+        GoogleIdToken idToken = verifier.verify(code); // Already instanced by a BEAN in GoogleAuthConfig
 
-        if (userOptional.isEmpty()) {
-            // 如果 Google 账户不存在，创建新用户
-            User newUser = new User();
-            newUser.setGoogleId(googleId);
-            newUser.setEmail(email);
-            newUser.setName(name);
-            newUser.setAvatar(avatarUrl);
-            userRepository.save(newUser);
-
-            return new UserVO(newUser.getId(), googleId, email, name, avatarUrl);
-        } else {
-            // 获取已有用户
-            User existUser = userOptional.get();
-            boolean isUpdated = false;
-
-            if (!existUser.getName().equals(name)) {
-                existUser.setName(name);
-                isUpdated = true;
-            }
-            if (!existUser.getAvatar().equals(avatarUrl)) {
-                existUser.setAvatar(avatarUrl);
-                isUpdated = true;
-            }
-
-            if (isUpdated) {
-                userRepository.save(existUser);
-            }
-
-            return new UserVO(existUser.getId(), existUser.getGoogleId(), existUser.getEmail(), existUser.getName(), existUser.getAvatar());
+        if(idToken == null){
+            throw new RuntimeException(ExceptionMessageConstant.WRONG_CREDENTIALS);
         }
-    }
 
-    @Override
-    public UserVO getUserByGoogleId(String googleId) {
-        return userRepository.findByGoogleId(googleId)
-                .map(user -> new UserVO(
-                        user.getId(),
-                        user.getGoogleId(),
-                        user.getEmail(),
-                        user.getName(),
-                        user.getAvatar()
-                ))
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
+        // 2. 自动注册/登录（核心业务逻辑）：
+        //      查库：拿着 Token 里的 Email 去数据库里搜。
+        //      注册：如果搜不到，就直接用 Google 提供的信息（姓名、头像、Email）新建一个 User 记录.
+        Payload payload = idToken.getPayload();
 
+        String userId = payload.getSubject();
 
-    @Override
-    public void saveAccessToken(String googleId, String accessToken) {
-        redisTemplate.opsForValue().set(TOKEN_PREFIX + accessToken, googleId, 1, TimeUnit.DAYS); // 1 小时过期
-    }
+        // Get profile information from payload
+        String email = payload.getEmail();
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
 
-    @Override
-    public Optional<String> getGoogleIdByAccessToken(String accessToken) {
-        String googleId = redisTemplate.opsForValue().get(TOKEN_PREFIX + accessToken);
-        return Optional.ofNullable(googleId);
+        // Get User or Create User
+        User user = userRepository.findByEmail(email).orElseGet(
+                ()->{return userRepository.save(User.builder()
+                            .email(email)
+                            .name(name)
+                            .googleId(userId)
+                            .role(Role.User)
+                            .avatar(pictureUrl)
+                            .build()
+                            );
+                });
+        //Create JWT tokens by jjwt lib
+        String tokens = jwtUtils.generateToken(user);
+
+        //  return UserVO + tokens
+        return UserVO.builder()
+                .token(tokens)
+                .name(user.getName())
+                .avatar(user.getAvatar())
+                .build();
     }
 }

@@ -10,6 +10,5 @@ import java.util.Map;
 public interface CourseService {
     Course getCourseById(Long id);
     PageResult getCourses(CoursePageQueryDTO pageQueryDTO);
-
     PageResult getCourseByQuery(String query);
 }

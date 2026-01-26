@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import CourseCard from '../../components/course_components/CourseCard';
-import { fetchCourses, searchCourses } from '../../service/fetch_course.js';
+import { fetchCourses, searchCourses } from '../../api/fetch_course.js';
 import PageNumber from '../../components/common_components/PageNumber';
 
 export default function CourseList({ search }) {
