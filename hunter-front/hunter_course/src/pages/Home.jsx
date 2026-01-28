@@ -19,20 +19,6 @@ export default function Home() {
                 </Link>
             </section>
 
-             {/* Features Grid */}
-            <section className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
-                {[
-                    { title: "Global Reach", desc: "Courses from 10+ countries available.", icon: "🌍" },
-                    { title: "Student Reviews", desc: "Real feedback from students like you.", icon: "⭐" },
-                    { title: "Easy Search", desc: "Find exactly what you need in seconds.", icon: "🔍" },
-                ].map((item, i) => (
-                    <div key={i} className="bg-slate-900/50 backdrop-blur border border-white/5 p-8 rounded-2xl hover:bg-slate-800/50 transition-colors">
-                        <div className="text-4xl mb-4">{item.icon}</div>
-                        <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                        <p className="text-slate-400">{item.desc}</p>
-                    </div>
-                ))}
-            </section>
         </div>
     );
 }

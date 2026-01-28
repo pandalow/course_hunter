@@ -43,10 +43,10 @@ export default function CourseList({ search }) {
 
     return (
         <div className="flex flex-col items-center w-full">
-            {/* 课程网格 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-12">
+            {/* 课程列表 */}
+            <div className="flex flex-col gap-4 w-full max-w-5xl mb-12">
                 {courses.length === 0 ? (
-                    <div className="col-span-full text-center py-12">
+                    <div className="text-center py-12">
                         <p className="text-slate-400 text-lg">No courses found matching your criteria.</p>
                     </div>
                 ) : (

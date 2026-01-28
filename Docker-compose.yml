@@ -1,0 +1,40 @@
+services:
+  # 数据库服务
+  db:
+    image: mysql:8.0
+    container_name: hunter-db
+    environment:
+      MYSQL_ROOT_PASSWORD: "03279891zxj"
+      MYSQL_DATABASE: "mockhunter"
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      # 建议增加持久化，否则删除容器后数据就没了
+      - mysql_data:/var/lib/mysql 
+
+  # 后端服务
+  backend:
+    build: ./hunter-back
+    container_name: hunter-api
+    depends_on:
+      - db
+    environment:
+      # 直接使用 Spring 标准变量名，省去代码修改
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/mockhunter?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=03279891zxj
+    ports:
+      - "8080:8080"
+
+  # 前端服务
+  frontend:
+    build: ./hunter-front/hunter_course
+    container_name: hunter-web
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:

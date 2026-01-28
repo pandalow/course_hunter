@@ -44,6 +44,14 @@ export default function MainNavigation() {
             console.log("Error");
         }
     }
+
+    const handleLogOut = () => {
+        localStorage.removeItem('app_token');
+        localStorage.removeItem('user_info');
+        setUser(null);
+        navigate('/');
+    }
+
     return (
         <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-slate-950/80 border-b border-white/10 supports-[backdrop-filter]:bg-slate-950/60">
             <nav className="container mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -76,7 +84,8 @@ export default function MainNavigation() {
                     {/* User / Login */}
                     <div className="flex items-center pl-6 border-l border-white/10">
                         {userinfo ? (
-                            <User user={userinfo} /> 
+                            <User user={userinfo}
+                            logout={handleLogOut} />
                         ) : (
                             <GoogleLogin
                                 onSuccess={handleGoogleLogin}

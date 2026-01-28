@@ -2,42 +2,60 @@ import { Link } from 'react-router-dom';
 
 export default function CourseCard({ course }) {
     return (
-        <Link to={`/course/${course.id}`} className="block group h-full">
-            <div className="h-full bg-slate-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 flex flex-col gap-4 transform transition-all duration-300 hover:scale-[1.02] hover:bg-slate-800/80 hover:shadow-xl hover:shadow-blue-500/10 hover:border-blue-500/30">
+        <Link to={`/course/${course.id}`} className="block group">
+            <div className="bg-slate-900/50 backdrop-blur-sm border border-white/5 rounded-xl p-5 flex flex-col sm:flex-row gap-6 transition-all duration-300 hover:bg-slate-800/80 hover:shadow-lg hover:shadow-blue-500/10 hover:border-blue-500/30">
                 
-                <div className="flex items-start justify-between gap-4">
-                    {/* Course Image */}
-                    <div className="bg-white/5 rounded-xl p-2 shrink-0">
+                {/* Course Image */}
+                <div className="shrink-0">
+                    <div className="bg-white/5 rounded-lg p-2 w-20 h-20 sm:w-24 sm:h-24 mx-auto sm:mx-0">
                          <img 
-                            className="w-16 h-16 object-cover rounded-lg"
+                            className="w-full h-full object-cover rounded shadow-sm"
                             src={course.image || '/default_course.png'}  
                             alt={course.title} 
                         />
                     </div>
-                   
-                    {/* Rating Badge */}
-                    <div className="flex items-center gap-1 bg-yellow-500/10 px-2 py-1 rounded-full border border-yellow-500/20">
-                        <span className="text-sm">⭐</span>
-                        <span className="text-sm font-semibold text-yellow-500">{course.rating}</span>
-                    </div>
                 </div>
 
-                <div className="flex flex-col flex-1 gap-2">
-                    <h2 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{course.title}</h2>
-                    
-                    <div className="text-xs font-medium uppercase tracking-wider text-slate-500 flex flex-wrap gap-2">
-                         <span className="bg-slate-800 px-2 py-1 rounded">{course.countryName}</span>
-                         <span className="bg-slate-800 px-2 py-1 rounded">{course.code}</span>
+                {/* Content */}
+                <div className="flex flex-col flex-1 min-w-0 gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                         <div>
+                            <h2 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors truncate pr-4">
+                                {course.title}
+                            </h2>
+                             <div className="text-xs font-medium uppercase tracking-wider text-slate-500 flex flex-wrap gap-2 mt-1">
+                                <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-white/5">{course.countryName}</span>
+                                <span className="bg-slate-800/80 px-2 py-0.5 rounded border border-white/5">{course.code}</span>
+                            </div>
+                         </div>
+
+                        {/* Rating Badge */}
+                        <div className="flex items-center gap-1.5 bg-yellow-500/10 px-2.5 py-1 rounded-full border border-yellow-500/20 self-start sm:self-center shrink-0">
+                            <span className="text-sm">⭐</span>
+                            <span className="text-sm font-bold text-yellow-500">{course.rating}</span>
+                        </div>
                     </div>
 
-                    <p className="text-slate-400 text-sm line-clamp-2 mt-1 min-h-[2.5rem]">
+                    <p className="text-slate-400 text-sm line-clamp-2 mt-1">
                         {course.description || 'No description available for this course.'}
                     </p>
-                </div>
 
-                <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-500 font-medium">
-                     <span>{course.institutionName || 'Unknown Institution'}</span>
-                     <span className="text-slate-600">{course.comments || 0} Comments</span>
+                    <div className="mt-auto pt-3 flex flex-wrap items-center justify-between text-xs text-slate-500 font-medium">
+                        <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                                {course.institutionName || 'Unknown Institution'}
+                            </span>
+                             {course.semester && (
+                                <span className="hidden sm:inline text-slate-600">
+                                   • {course.semester}
+                                </span>
+                             )}
+                        </div>
+                        <span className="group-hover:text-blue-400 transition-colors">
+                            {course.comments || 0} Comments
+                        </span>
+                    </div>
                 </div>
             </div>
         </Link>
