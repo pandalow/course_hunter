@@ -13,8 +13,8 @@ import java.util.Collections;
 @Configuration
 public class GoogleAuthConfig {
 
-//    @Value("${}")
-    private String googleClientId = "234209469090-fjp91clg376k25enntk48kpaqscinutn.apps.googleusercontent.com";
+    @Value("${Auth.ClientId.google}")
+    private String googleClientId;
 
     @Bean
     public GoogleIdTokenVerifier googleIdTokenVerifier(){

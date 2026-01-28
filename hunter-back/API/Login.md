@@ -15,3 +15,11 @@ Response:
 
 ```
   
+Auth
+api: Get {api}/me
+Description: 
+
+Response
+```agsl
+
+```

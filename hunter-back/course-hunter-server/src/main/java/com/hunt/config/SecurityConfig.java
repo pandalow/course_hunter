@@ -1,6 +1,5 @@
 package com.hunt.config;
 
-import ch.qos.logback.core.CoreConstants;
 import com.hunt.filter.AuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +27,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 无状态 Session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/auth/login/google").permitAll() // 允许的接口
-                        .requestMatchers("/oauth/me", "/protected/**","/course/**").authenticated() // 需要认证的接口
+                        .requestMatchers("/", "/auth/**").permitAll() // 允许的接口
+                        .requestMatchers("/protected/**","/course/**").authenticated() // 需要认证的接口
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class); //

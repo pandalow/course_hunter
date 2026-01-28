@@ -2,26 +2,42 @@ import { Link } from 'react-router-dom';
 
 export default function CourseCard({ course }) {
     return (
-        <Link to={`/course/${course.id}`} className="block">
-            <div className="bg-gray-900 text-white shadow-md rounded-2xl flex flex-col p-4 gap-4 border border-gray-700 hover:shadow-xl hover:-translate-y-1 transition duration-300 cursor-pointer w-full min-h-[260px]">
+        <Link to={`/course/${course.id}`} className="block group h-full">
+            <div className="h-full bg-slate-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-5 flex flex-col gap-4 transform transition-all duration-300 hover:scale-[1.02] hover:bg-slate-800/80 hover:shadow-xl hover:shadow-blue-500/10 hover:border-blue-500/30">
                 
-                {/* 课程图片 */}
-                <img 
-                    className="w-24 h-24 object-cover rounded-lg mx-auto"
-                    src={course.image || '/default_course.png'}  
-                    alt={course.title} 
-                />
-
-                {/* 课程信息 */}
-                <div className="flex flex-col justify-between flex-1">
-                    <h2 className="text-lg font-bold text-white text-center">{course.title}</h2>
-                    <div className="text-gray-400 text-sm space-y-1 text-center">
-                        <p className="font-medium">{course.countryName} / {course.code} / {course.semester || 'Not specified'}</p>
-                        <p className="text-gray-500">{course.institutionName || 'Not specified'}</p>
-                        <p className="line-clamp-2 text-gray-300">{course.description || 'No description available'}</p>
-                        <p className="text-yellow-400 text-lg">⭐ {course.rating}</p>
-                        <p className="text-gray-500">{course.comments || 'No comments'}</p>
+                <div className="flex items-start justify-between gap-4">
+                    {/* Course Image */}
+                    <div className="bg-white/5 rounded-xl p-2 shrink-0">
+                         <img 
+                            className="w-16 h-16 object-cover rounded-lg"
+                            src={course.image || '/default_course.png'}  
+                            alt={course.title} 
+                        />
                     </div>
+                   
+                    {/* Rating Badge */}
+                    <div className="flex items-center gap-1 bg-yellow-500/10 px-2 py-1 rounded-full border border-yellow-500/20">
+                        <span className="text-sm">⭐</span>
+                        <span className="text-sm font-semibold text-yellow-500">{course.rating}</span>
+                    </div>
+                </div>
+
+                <div className="flex flex-col flex-1 gap-2">
+                    <h2 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1">{course.title}</h2>
+                    
+                    <div className="text-xs font-medium uppercase tracking-wider text-slate-500 flex flex-wrap gap-2">
+                         <span className="bg-slate-800 px-2 py-1 rounded">{course.countryName}</span>
+                         <span className="bg-slate-800 px-2 py-1 rounded">{course.code}</span>
+                    </div>
+
+                    <p className="text-slate-400 text-sm line-clamp-2 mt-1 min-h-[2.5rem]">
+                        {course.description || 'No description available for this course.'}
+                    </p>
+                </div>
+
+                <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-500 font-medium">
+                     <span>{course.institutionName || 'Unknown Institution'}</span>
+                     <span className="text-slate-600">{course.comments || 0} Comments</span>
                 </div>
             </div>
         </Link>

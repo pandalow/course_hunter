@@ -16,6 +16,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.transaction.annotation.Transactional;
 
 
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         if(idToken == null){
             throw new RuntimeException(ExceptionMessageConstant.WRONG_CREDENTIALS);
         }
+
 
         // 2. 自动注册/登录（核心业务逻辑）：
         //      查库：拿着 Token 里的 Email 去数据库里搜。
@@ -72,6 +74,19 @@ public class UserServiceImpl implements UserService {
         //  return UserVO + tokens
         return UserVO.builder()
                 .token(tokens)
+                .name(user.getName())
+                .mail(user.getEmail())
+                .avatar(user.getAvatar())
+                .build();
+    }
+
+    @Override
+    public UserVO getUserByGoogleId(String googleId) {
+        System.out.println(googleId);
+        User user = userRepository.findByGoogleId(googleId).orElseThrow(
+                ()-> new RuntimeException("User Not Found"));
+
+        return UserVO.builder()
                 .name(user.getName())
                 .mail(user.getEmail())
                 .avatar(user.getAvatar())

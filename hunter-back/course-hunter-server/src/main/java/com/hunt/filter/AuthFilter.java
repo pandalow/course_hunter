@@ -41,9 +41,9 @@ public class AuthFilter extends OncePerRequestFilter {
 
         try{
             Claims claims = jwtUtils.extractAllClaims(jwt);
-            String email = claims.getSubject();
+            String googleId = claims.getSubject();
             String role = (String)claims.get("role");
-            if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            if(googleId != null && SecurityContextHolder.getContext().getAuthentication() == null){
 
                 // Create a verification credential
                 // 参数1：Principal（当事人，通常是 email 或 User 对象）
@@ -52,7 +52,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        email,
+                        googleId,
                         null,
                         authorities
                 );
@@ -60,7 +60,7 @@ public class AuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }catch (Exception e){
-            logger.warn("JWT validation failed: \" + e.getMessage()");
+            logger.warn("JWT validation failed: " + e.getMessage());
         }
 
         // 继续执行请求
