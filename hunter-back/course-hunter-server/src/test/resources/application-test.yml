@@ -1,0 +1,45 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: course-hunter-server-test
+  # 💡 再次提醒：这里绝对不能写 spring.profiles.active: test
+
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# 🚀 补齐报错缺失的 hunt 命名空间下的所有变量
+hunt:
+  datasource:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""  # 💡 加上这一行，解决占位符找不到的问题
+      database: 0
+  security:
+    oauth2:
+      client-id: test-id
+      client-secret: test-secret
+      expiration: 3600000
+
+Auth:
+  ClientId:
+    google: test-id
+    secret: MTY4YmI5N2VjYmI0ZDUwM2M0YWU1Y2I4YTM0YzVjZDY3Mjk2YmYyM2Q4ZGQyNTVhN2U3YjFhM2Y0ODk1MGExYg==
+    expiration: 3600000
