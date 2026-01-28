@@ -34,3 +34,4 @@ replay_pid*
 
 /course-hunter-server/src/main/resources/application-dev.yml
 /course-hunter-server/src/main/resources/application-prod.yml
+/course-hunter-server/src/main/resources/application-test.yml

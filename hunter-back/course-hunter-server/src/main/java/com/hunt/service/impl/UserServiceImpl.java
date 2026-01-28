@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
 
         // Verified credential code;
         GoogleIdToken idToken = verifier.verify(code); // Already instanced by a BEAN in GoogleAuthConfig
-
         if(idToken == null){
             throw new RuntimeException(ExceptionMessageConstant.WRONG_CREDENTIALS);
         }
@@ -74,6 +73,7 @@ public class UserServiceImpl implements UserService {
         return UserVO.builder()
                 .token(tokens)
                 .name(user.getName())
+                .mail(user.getEmail())
                 .avatar(user.getAvatar())
                 .build();
     }

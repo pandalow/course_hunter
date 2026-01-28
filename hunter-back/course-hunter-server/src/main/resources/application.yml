@@ -30,7 +30,7 @@ spring:
 Auth:
   ClientId:
     google: ${hunt.security.oauth2.client-id}
-    secret: ${hunt.security.oauth2.secret-key}
+    secret: ${hunt.security.oauth2.secret}
     expiration: ${hunt.security.oauth2.expiration}
 # swagger-ui custom path
 springdoc:

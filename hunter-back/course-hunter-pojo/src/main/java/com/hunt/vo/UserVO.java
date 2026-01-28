@@ -1,6 +1,5 @@
 package com.hunt.vo;
 
-import com.hunt.enumerate.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class UserVO {
     private String token;
     private String name;
+    private String mail;
     private String avatar;
 }

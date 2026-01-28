@@ -24,6 +24,7 @@ public class AuthController {
          * @return 返回包含访问令牌的结果对象
          * @throws IOException 处理认证过程中可能出现的输入输出异常
          */
+        System.out.println(payload);
         String code = payload.get("credential");
         UserVO userVo = userService.handleGoogleOAuth(code);
         return Result.success(userVo);
