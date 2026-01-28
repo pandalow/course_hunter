@@ -21,6 +21,7 @@ services:
       - db
     environment:
       # 直接使用 Spring 标准变量名，省去代码修改
+      - SPRING_PROFILES_ACTIVE=prod  
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/mockhunter?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=03279891zxj

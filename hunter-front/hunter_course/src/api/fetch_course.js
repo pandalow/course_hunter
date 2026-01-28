@@ -25,6 +25,6 @@ export const searchCourses = async (query) => {
 
 
 export const fetchCourseById = async (id) => {
-    const response = await api.get(`/courses/${id}`)
+    const response = await api.get(`/course/${id}`)
     return response.data.data
 }
