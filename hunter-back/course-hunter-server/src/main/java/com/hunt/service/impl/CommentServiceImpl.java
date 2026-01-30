@@ -12,7 +12,6 @@ import com.hunt.entity.Teacher;
 import com.hunt.entity.User;
 import com.hunt.enumerate.TargetType;
 import com.hunt.service.CommentService;
-import com.hunt.utils.CopyUtil;
 import com.hunt.vo.CommentVO;
 
 import lombok.RequiredArgsConstructor;

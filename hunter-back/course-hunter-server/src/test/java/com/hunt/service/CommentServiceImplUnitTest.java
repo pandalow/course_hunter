@@ -108,7 +108,7 @@ class CommentServiceImplUnitTest {
         comment.setCreateTime(Instant.now());
         comment.setUser(mockUser);
         
-        when(commentDAO.findByCourseIdAndIsDeletedFalseOrderByCreateTimeDesc(courseId))
+        when(commentDAO.findByCourse_IdAndIsDeletedFalseOrderByCreateTimeDesc(courseId))
                 .thenReturn(List.of(comment));
 
         List<CommentVO> results = commentService.getComments(courseId, targetType);
