@@ -48,6 +48,7 @@ public class UserServiceImplUnitTest {
         this.mockCode = "google_mock_code";
         this.mockEmail = "test@gmail.com";
         this.existingUser = User.builder()
+                .id(1L)
                 .email(mockEmail)
                 .name("HUNT")
                 .build();
@@ -74,6 +75,7 @@ public class UserServiceImplUnitTest {
         //Assertion
         assertThat(userVO.getToken()).isEqualTo("mock-jwt-code");
         assertThat(userVO.getName()).isEqualTo("HUNT");
+        assertThat(userVO.getId()).isEqualTo(1L);
 
         //Assertion of Database has not been invoked
         verify(userDAO, never()).save(any());
@@ -89,12 +91,17 @@ public class UserServiceImplUnitTest {
         when(userDAO.findByEmail(mockEmail)).thenReturn(Optional.empty());
         when(jwtUtils.generateToken(any(User.class))).thenReturn(("mock-jwt-code"));
 
-        //Mock the database is return a objection
-        when(userDAO.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        //Mock the database to return a user object with a simulated generated ID
+        when(userDAO.save(any(User.class))).thenAnswer(invocation -> {
+            User savedUser = invocation.getArgument(0);
+            savedUser.setId(2L);
+            return savedUser;
+        });
 
         UserVO userVo = userService.handleGoogleOAuth(mockCode);
 
         assertThat(userVo.getToken()).isEqualTo("mock-jwt-code");
+        assertThat(userVo.getId()).isEqualTo(2L);
 
         //Assertion of Database is being called;
         verify(userDAO, times(1)).save(any(User.class));

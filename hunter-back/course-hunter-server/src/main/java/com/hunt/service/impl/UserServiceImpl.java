@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
 
         //  return UserVO + tokens
         return UserVO.builder()
+                .id(user.getId())
                 .token(tokens)
                 .name(user.getName())
                 .mail(user.getEmail())
@@ -82,6 +83,7 @@ public class UserServiceImpl implements UserService {
                 ()-> new RuntimeException("User Not Found"));
 
         return UserVO.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .mail(user.getEmail())
                 .avatar(user.getAvatar())

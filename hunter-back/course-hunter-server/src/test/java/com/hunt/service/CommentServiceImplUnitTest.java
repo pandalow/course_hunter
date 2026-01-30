@@ -10,6 +10,7 @@ import com.hunt.entity.Course;
 import com.hunt.entity.User;
 import com.hunt.service.impl.CommentServiceImpl;
 import com.hunt.vo.CommentVO;
+import com.hunt.enumerate.TargetType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,11 +63,14 @@ class CommentServiceImplUnitTest {
         mockUser = new User();
         mockUser.setId(1L);
         mockUser.setGoogleId(testGoogleId);
+        mockUser.setName("Test User");
+        mockUser.setAvatar("avatar.png");
 
         // 模拟 SecurityContext
         SecurityContextHolder.setContext(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn(testGoogleId);
+        // Only mock authentication for methods that need it (save, delete)
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getName()).thenReturn(testGoogleId);
     }
 
     @Test
@@ -81,7 +88,35 @@ class CommentServiceImplUnitTest {
         CommentVO result = commentService.save(dto);
 
         assertNotNull(result);
+        assertEquals("Great Course!", result.getContent());
+        assertEquals(mockUser.getId(), result.getUserId());
+        assertEquals(mockUser.getName(), result.getUserName());
+        assertEquals(mockUser.getAvatar(), result.getUserAvatar());
+        
         verify(commentDAO, times(1)).save(any(Comment.class));
+    }
+
+    @Test
+    @DisplayName("Get Comments for Course Successfully")
+    void getComments_Course_Success() {
+        Long courseId = 101L;
+        String targetType = "2"; // COURSE
+
+        Comment comment = new Comment();
+        comment.setId(500L);
+        comment.setContent("Nice one");
+        comment.setCreateTime(Instant.now());
+        comment.setUser(mockUser);
+        
+        when(commentDAO.findByCourseIdAndIsDeletedFalseOrderByCreateTimeDesc(courseId))
+                .thenReturn(List.of(comment));
+
+        List<CommentVO> results = commentService.getComments(courseId, targetType);
+
+        assertNotNull(results);
+        assertEquals(1, results.size());
+        assertEquals(comment.getContent(), results.get(0).getContent());
+        assertEquals(mockUser.getId(), results.get(0).getUserId());
     }
 
     @Test

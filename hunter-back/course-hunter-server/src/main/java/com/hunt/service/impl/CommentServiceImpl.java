@@ -16,12 +16,16 @@ import com.hunt.utils.CopyUtil;
 import com.hunt.vo.CommentVO;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,7 +76,14 @@ public class CommentServiceImpl implements CommentService {
         }
 
         commentDAO.save(comment);
-        return CopyUtil.copyProperties(comment, CommentVO.class);
+        
+        // Manual mapping to ensure user info is included
+        CommentVO vo = new CommentVO();
+        BeanUtils.copyProperties(comment, vo);
+        vo.setUserId(user.getId());
+        vo.setUserName(user.getName());
+        vo.setUserAvatar(user.getAvatar());
+        return vo;
     }
 
     /**
@@ -93,5 +104,28 @@ public class CommentServiceImpl implements CommentService {
         }
         comment.setDeleted(true);
         commentDAO.save(comment);
+    }
+
+    @Override
+    public List<CommentVO> getComments(Long targetId, String targetType) {
+        TargetType type = TargetType.fromValue(Integer.parseInt(targetType));
+        List<Comment> comments = new ArrayList<>();
+
+        if (type == TargetType.COURSE) {
+            comments = commentDAO.findByCourse_IdAndIsDeletedFalseOrderByCreateTimeDesc(targetId);
+        } else if (type == TargetType.TEACHER) {
+            comments = commentDAO.findByTeacher_IdAndIsDeletedFalseOrderByCreateTimeDesc(targetId);
+        }
+
+        return comments.stream().map(comment -> {
+            CommentVO vo = new CommentVO();
+            BeanUtils.copyProperties(comment, vo);
+            if (comment.getUser() != null) {
+                vo.setUserId(comment.getUser().getId());
+                vo.setUserName(comment.getUser().getName());
+                vo.setUserAvatar(comment.getUser().getAvatar());
+            }
+            return vo;
+        }).collect(Collectors.toList());
     }
 }

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/comment")
@@ -25,6 +27,19 @@ public class CommentController {
         log.info("Request info: " + commentDTO);
         CommentVO commentVO = commentService.save(commentDTO);
         return Result.success(commentVO);
+    }
+
+    /**
+     * Get comments by targetId and targetType
+     * @param targetId
+     * @param targetType
+     * @return List of CommentVO
+     */
+    @GetMapping
+    public Result<List<CommentVO>> getComments(@RequestParam Long targetId, @RequestParam String targetType) {
+        log.info("Get comments for targetId: {}, targetType: {}", targetId, targetType);
+        List<CommentVO> comments = commentService.getComments(targetId, targetType);
+        return Result.success(comments);
     }
 
     /**

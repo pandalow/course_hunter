@@ -17,6 +17,7 @@ export default function MainNavigation() {
 
             authMe().then(data => {
                 const userData = {
+                    id: data.id,
                     name: data.name,
                     email: data.email,
                     avatar: data.avatar
@@ -36,6 +37,7 @@ export default function MainNavigation() {
         try {
             const response = await googleLogin(credentialResponse);
             setUser({
+                id: response.id,
                 name: response.name,
                 email: response.email,
                 avatar: response.avatar

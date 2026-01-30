@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserVO {
+    private Long id;
     private String token;
     private String name;
     private String mail;
