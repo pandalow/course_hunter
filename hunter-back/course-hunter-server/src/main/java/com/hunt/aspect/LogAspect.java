@@ -1,6 +1,7 @@
 package com.hunt.aspect;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @Aspect
+@RequiredArgsConstructor
 public class LogAspect {
-    @Autowired
-    private HttpServletRequest request;
 
+    private final HttpServletRequest request;
     @Around("@annotation(com.hunt.anno.Log)")
     public Object recordLog(ProceedingJoinPoint jointPoint) throws Throwable {
         //TODO Adding Log injection function

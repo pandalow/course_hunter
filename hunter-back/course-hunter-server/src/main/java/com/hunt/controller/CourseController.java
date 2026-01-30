@@ -5,7 +5,8 @@ import com.hunt.entity.Course;
 import com.hunt.result.PageResult;
 import com.hunt.result.Result;
 import com.hunt.service.CourseService;
-import com.hunt.vo.CourseCardVO;
+import com.hunt.vo.CourseVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/course")
-
+@RequiredArgsConstructor
 public class CourseController {
-    @Autowired
-    private CourseService courseService;
+
+    private final CourseService courseService;
 
     /**
      * Get course by ID, url {id} represent the resources of database
      *
-     * @param id
+     * @param id id
      * @return course content
      */
     @GetMapping("/{id}")
@@ -45,11 +46,6 @@ public class CourseController {
      * @return Card information which display on the home page
      */
     @GetMapping
-//    @Cacheable(cacheNames = "commonCache",
-//            key = "'page:' + #page " +
-//                    "+ '-pageSize:' " +
-//                    "+ #pageSize + '-countryId:' " +
-//                    "+ #sortDirection + '-sortBy:' + #sortBy")
     public Result getCourses(
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "12") Integer pageSize,
@@ -70,8 +66,8 @@ public class CourseController {
     }
 
     @GetMapping("/find")
-    public Result<PageResult<CourseCardVO>> searchCourse(@RequestParam("query") String query) {
-        PageResult<CourseCardVO> courses = courseService.getCourseByQuery(query);
+    public Result<PageResult<CourseVO>> searchCourse(@RequestParam("query") String query) {
+        PageResult<CourseVO> courses = courseService.getCourseByQuery(query);
         return Result.success(courses);
     }
 }

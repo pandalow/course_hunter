@@ -1,6 +1,6 @@
 package com.hunt.dto;
 
-import com.hunt.entity.ResultItem;
+import com.hunt.vo.ResultItem;
 import lombok.Data;
 
 import java.util.List;

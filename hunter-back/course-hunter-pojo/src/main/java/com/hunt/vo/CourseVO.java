@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CourseCardVO implements Serializable {
+public class CourseVO implements Serializable {
     private Long id;
     private String code;
     private String title;

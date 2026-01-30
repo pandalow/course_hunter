@@ -7,6 +7,8 @@ spring:
     active: dev
   main:
     allow-circular-references: true
+
+
   # Cache service setting
   cache:
     cache-names: commonCache
@@ -32,6 +34,7 @@ Auth:
     google: ${hunt.security.oauth2.client-id}
     secret: ${hunt.security.oauth2.secret}
     expiration: ${hunt.security.oauth2.expiration}
+
 # swagger-ui custom path
 springdoc:
   swagger-ui:

@@ -1,26 +1,33 @@
 CREATE DATABASE IF NOT EXISTS mockhunter;
-USE mockhunter;
-
-create table book
-(
-    id        bigint auto_increment
-        primary key,
-    name      text         not null,
-    author    varchar(255) null,
-    isbn      varchar(255) null,
-    chapters  varchar(255) null,
-    publisher varchar(255) null
-)
-    engine = InnoDB;
-
 create table college
 (
     id             bigint auto_increment
         primary key,
     name           varchar(255) not null,
     institution_id bigint       not null
+);
+
+create table comment
+(
+    id          bigint auto_increment comment '主键ID'
+        primary key,
+    content     text                 not null comment '评论内容',
+    user_id     bigint               not null comment '发表评论的用户ID',
+    course_id   bigint               null comment '关联的课程ID（可为空）',
+    teacher_id  bigint               null comment '关联的教师ID（可为空）',
+    is_deleted  tinyint(1) default 0 null comment '逻辑删除标识：0未删除，1已删除',
+    create_time datetime(6)          null comment '创建时间'
 )
-    engine = InnoDB;
+    collate = utf8mb4_unicode_ci;
+
+create index idx_course_id
+    on comment (course_id);
+
+create index idx_teacher_id
+    on comment (teacher_id);
+
+create index idx_user_id
+    on comment (user_id);
 
 create table country
 (
@@ -36,85 +43,14 @@ create table country
     russian_name  varchar(255) null,
     german_name   varchar(255) null,
     spanish_name  varchar(255) null
-)
-    engine = InnoDB;
-
-create table course
-(
-    id               bigint auto_increment
-        primary key,
-    code             varchar(255) null,
-    title            varchar(255) not null,
-    semester         varchar(255) null,
-    credits          int(3)       null,
-    outline          text         null,
-    outcomes         text         null,
-    assessments      varchar(255) null,
-    institution_name varchar(255) null,
-    country_name     varchar(255) null
-)
-    engine = InnoDB;
-
-create table course_book
-(
-    course_id bigint not null,
-    book_id   bigint not null,
-    primary key (course_id, book_id)
-)
-    engine = InnoDB;
-
-create table course_comment
-(
-    id          bigint auto_increment comment 'Primary key identifier'
-        primary key,
-    content     text                                 not null comment 'Comment content',
-    course_id   bigint                               not null comment 'Course identifier',
-    user_id     bigint                               not null comment 'User identifier',
-    level       int                                  not null comment 'Comment level: 0 for course, 1 for 0th level, 2 for 1st level',
-    parent_id   bigint                               null comment 'The id of the replied comment, if none exists, this value is null',
-    root_id     bigint                               null comment 'The id of the root comment, if none exists, the value is null. This id is used for easy categorization',
-    is_deleted  tinyint(1) default 0                 not null comment 'If comment is deleted',
-    create_time datetime   default CURRENT_TIMESTAMP not null comment 'Comment creation time'
-)
-    comment 'Table to store comments' engine = InnoDB;
-
-create table course_rating
-(
-    id          bigint auto_increment comment 'ID for the rating, primary key'
-        primary key,
-    user_id     bigint                              not null comment 'User identifier',
-    course_id   bigint                              not null comment 'Course identifier',
-    rating      int                                 not null comment 'Rating value',
-    content     text                                null comment 'Rating text',
-    create_time datetime  default CURRENT_TIMESTAMP not null comment 'Creation time',
-    update_time timestamp default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment 'Update time',
-    constraint idx_unique_rating
-        unique (user_id, course_id)
-)
-    comment 'Table to store ratings' engine = InnoDB;
+);
 
 create table course_teacher
 (
     course_id  bigint not null,
     teacher_id bigint not null,
     primary key (course_id, teacher_id)
-)
-    engine = InnoDB;
-
-create table course_ugc
-(
-    id                  bigint auto_increment comment 'automatically generated primary key'
-        primary key,
-    rating              double   null comment 'rating of the course',
-    latest_comment      text     null comment 'most recent comment on the course',
-    comments_count      int      null comment 'number of comments on the course',
-    latest_comment_time datetime null comment 'timestamp of the most recent comment',
-    country_id          bigint   null comment 'query by country',
-    institution_id      bigint   null comment 'query by institution',
-    credit              int      null comment 'query by credit',
-    status              bigint   null
-)
-    comment 'user-generated content for courses' engine = InnoDB;
+);
 
 create table institution
 (
@@ -124,8 +60,26 @@ create table institution
     country_code varchar(255) not null,
     country_id   bigint       null,
     name         varchar(255) null
-)
-    engine = InnoDB;
+);
+
+create table course
+(
+    id             bigint auto_increment
+        primary key,
+    code           varchar(255)  null,
+    title          varchar(255)  not null,
+    semester       varchar(255)  null,
+    credits        int default 0 null,
+    outline        text          null,
+    outcomes       text          null,
+    assessments    text          null,
+    institution_id bigint        null,
+    country_id     bigint        null,
+    constraint fk_course_country
+        foreign key (country_id) references country (id),
+    constraint fk_course_institution
+        foreign key (institution_id) references institution (id)
+);
 
 create table operation_log
 (
@@ -138,33 +92,26 @@ create table operation_log
     method_params  varchar(255) null comment 'operation args to String',
     return_values  varchar(255) null comment 'return values ',
     cost_time      bigint       null comment 'end time - begin time'
-)
-    engine = InnoDB;
+);
 
-create table program
+create table rating
 (
-    id             bigint auto_increment
+    id          bigint auto_increment comment '主键ID'
         primary key,
-    name           varchar(255) not null,
-    college_id     bigint       null,
-    degree         varchar(255) null,
-    code           varchar(255) null,
-    duration       varchar(255) null,
-    category       varchar(255) null,
-    institution_id bigint       null
-)
-    engine = InnoDB;
+    score       int          not null comment '评分分数 (例如1-5)',
+    content     varchar(500) null comment '简短的评价理由',
+    user_id     bigint       not null comment '评分用户ID',
+    course_id   bigint       null comment '关联课程ID',
+    teacher_id  bigint       null comment '关联教师ID（如果你想给老师也打分，建议预留）',
+    create_time datetime(6)  null comment '创建时间',
+    update_time datetime(6)  null comment '更新时间'
+);
 
-create table program_course
-(
-    program_id              bigint      not null,
-    course_id               bigint      not null,
-    optional                varchar(20) null comment 'optional or required',
-    program_course_semester varchar(20) null,
-    year                    varchar(20) null,
-    primary key (course_id, program_id)
-)
-    engine = InnoDB;
+create index idx_course_id
+    on rating (course_id);
+
+create index idx_user_id
+    on rating (user_id);
 
 create table teacher
 (
@@ -173,8 +120,7 @@ create table teacher
     name         varchar(255) not null,
     email        varchar(255) null,
     profile_link varchar(255) null
-)
-    engine = InnoDB;
+);
 
 create table users
 (
@@ -191,6 +137,5 @@ create table users
         unique (email),
     constraint google_id
         unique (google_id)
-)
-    engine = InnoDB;
+);
 

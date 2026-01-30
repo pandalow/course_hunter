@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class CourseRatingCreateDTO implements Serializable {
-    private Long courseId;
-    private Long userId;
-    private Integer rating;
+@NoArgsConstructor
+public class CommentDTO {
+
     private String content;
+
+    private String targetType;
+
+    private Long targetId;
 }

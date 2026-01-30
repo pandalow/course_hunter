@@ -7,37 +7,36 @@ import java.io.Serializable;
 import java.time.Instant;
 
 @Data
-@MappedSuperclass
-public abstract class Comment implements Serializable {
+@Entity
+@Table(name= "comment")
+public class Comment implements Serializable{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "content")
+  @Column(columnDefinition = "TEXT")
   private String content;
 
   @Column(name = "user_id")
   private Long userId;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
   private User user;
 
-  @Column(name = "level")
-  private Integer level;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "course_id")
+  private Course course;
 
-  @Column(name = "parent_id")
-  private Long parentId;
-
-  @Column(name = "root_id")
-  private Long rootId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name="teacher_id")
+  private Teacher teacher;
 
   @Column(name = "is_deleted")
   private boolean isDeleted;
 
   @Column(name = "create_time")
   private Instant createTime;
-
   @PrePersist
   protected void onCreate() {
     createTime = Instant.now();

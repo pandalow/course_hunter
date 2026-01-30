@@ -10,6 +10,5 @@ import java.util.List;
 
 @Repository
 public interface TeacherDAO extends JpaRepository<Teacher, Long> {
-    @Query("SELECT t.name FROM Teacher t JOIN t.courses c WHERE c.id = :courseId")
-    List<String> getTeacherNamesByCourses(@PathParam("courseId") Long courseId);
+
 }

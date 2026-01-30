@@ -1,4 +1,4 @@
-package com.hunt.entity;
+package com.hunt.vo;
 
 import lombok.Data;
 

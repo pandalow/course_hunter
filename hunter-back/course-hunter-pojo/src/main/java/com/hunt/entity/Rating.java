@@ -3,25 +3,37 @@ package com.hunt.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Data
-@MappedSuperclass
-public abstract class Rating {
+@Entity
+@Table(name = "rating")
+public class Rating implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "user_id")
-  private Long userId;
-
-  @Column(name = "rating")
-  private Integer rating;
+  @Column(name = "score")
+  private Integer score;
 
   @Column(name = "content")
   private String content;
 
-  @Column(name = "create_time")
+  @Column(name = "user_id")
+  private Long userId;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  private User user;
+
+  //
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "course_id")
+  private Course course;
+
+  // TimeStamp
+  @Column(name = "create_time", updatable = false)
   private Instant createTime;
 
   @Column(name = "update_time")
@@ -30,8 +42,8 @@ public abstract class Rating {
   @PrePersist
   protected void onCreate() {
     createTime = Instant.now();
+    updateTime = Instant.now();
   }
-
   @PreUpdate
   protected void onUpdate() {
     updateTime = Instant.now();

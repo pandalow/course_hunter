@@ -4,7 +4,6 @@ server:
 spring:
   application:
     name: course-hunter-server-test
-  # 💡 再次提醒：这里绝对不能写 spring.profiles.active: test
 
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
@@ -24,7 +23,6 @@ spring:
       host: localhost
       port: 6379
 
-# 🚀 补齐报错缺失的 hunt 命名空间下的所有变量
 hunt:
   datasource:
     redis:

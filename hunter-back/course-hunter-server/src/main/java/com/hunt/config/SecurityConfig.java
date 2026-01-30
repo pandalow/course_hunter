@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 无状态 Session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/auth/**").permitAll() // 允许的接口
+                        .requestMatchers("/", "/auth/**").permitAll()
                         .requestMatchers("/course", "/course/**").authenticated()
                         .requestMatchers("/protected/**").authenticated()
                         .anyRequest().authenticated()

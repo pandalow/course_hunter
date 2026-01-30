@@ -8,6 +8,7 @@ import com.hunt.service.UserService;
 import com.hunt.utils.JwtUtils;
 import com.hunt.vo.UserVO;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -18,32 +19,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDAO userRepository;
+    private final UserDAO userRepository;
+    private final GoogleIdTokenVerifier verifier;
+    private final JwtUtils jwtUtils;
 
-    @Autowired
-    private GoogleIdTokenVerifier verifier;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
+    /**
+     * Achieve Google OAuth verified processing by credential(TokenId)
+     * @param code token creds
+     * @return UserVO(include JWT)
+     */
     @Override
     @Transactional
     public UserVO handleGoogleOAuth(String code) throws Exception {
-        /*
-         * Achieve Google OAuth verified processing by credential(TokenId)
-         * @args: credential
-         * @return: UserVO(include JWT)
-         */
-
         // Verified credential code;
         GoogleIdToken idToken = verifier.verify(code); // Already instanced by a BEAN in GoogleAuthConfig
         if(idToken == null){
             throw new RuntimeException(ExceptionMessageConstant.WRONG_CREDENTIALS);
         }
-
 
         // 2. 自动注册/登录（核心业务逻辑）：
         //      查库：拿着 Token 里的 Email 去数据库里搜。
