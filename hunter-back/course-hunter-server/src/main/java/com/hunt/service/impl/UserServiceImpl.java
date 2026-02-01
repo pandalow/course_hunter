@@ -9,7 +9,6 @@ import com.hunt.utils.JwtUtils;
 import com.hunt.vo.UserVO;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -53,16 +52,16 @@ public class UserServiceImpl implements UserService {
         String pictureUrl = (String) payload.get("picture");
 
         // Get User or Create User
-        User user = userRepository.findByEmail(email).orElseGet(
-                ()->{return userRepository.save(User.builder()
-                            .email(email)
-                            .name(name)
-                            .googleId(userId)
-                            .role(Role.User)
-                            .avatar(pictureUrl)
-                            .build()
-                            );
-                });
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setName(name);
+            newUser.setGoogleId(userId);
+            newUser.setRole(Role.User);
+            newUser.setAvatar(pictureUrl);
+            return userRepository.save(newUser);
+        });
+
         //Create JWT tokens by jjwt lib
         String tokens = jwtUtils.generateToken(user);
 

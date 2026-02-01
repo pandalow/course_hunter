@@ -35,8 +35,7 @@ import static org.mockito.Mockito.*;
  * Unit test for CourseServiceImpl.
  * We use MockitoExtension for fast, standalone testing without loading Spring Context.
  */
-@SpringBootTest
-@ActiveProfiles("test")
+
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplUnitTest {
 

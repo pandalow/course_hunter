@@ -26,11 +26,10 @@ public class JwtUtilsTest {
                "EXPIRATION_TIME",
                86400000
        );
-        this.testUser = User.builder()
-                .googleId("google_12345")
-                .email("test@gmail.com")
-                .role(Role.User)
-                .build();
+        this.testUser = new User();
+        this.testUser.setGoogleId("google_12345");
+        this.testUser.setEmail("test@gmail.com");
+        this.testUser.setRole(Role.User);
     }
 
     @Test

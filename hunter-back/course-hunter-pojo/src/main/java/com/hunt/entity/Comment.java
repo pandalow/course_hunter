@@ -8,37 +8,38 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name= "comment")
-public class Comment implements Serializable{
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+@Table(name = "comment")
+public class Comment implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(columnDefinition = "TEXT")
-  private String content;
+    @Column(columnDefinition = "TEXT")
+    private String content;
 
-  @Column(name = "user_id")
-  private Long userId;
+    @Column(name = "user_id")
+    private Long userId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "course_id")
-  private Course course;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="teacher_id")
-  private Teacher teacher;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
-  @Column(name = "is_deleted")
-  private boolean isDeleted;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
-  @Column(name = "create_time")
-  private Instant createTime;
-  @PrePersist
-  protected void onCreate() {
-    createTime = Instant.now();
-  }
+    @Column(name = "create_time")
+    private Instant createTime;
+
+    @PrePersist
+    protected void onCreate() {
+        createTime = Instant.now();
+    }
 }

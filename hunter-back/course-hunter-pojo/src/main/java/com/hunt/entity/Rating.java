@@ -8,7 +8,9 @@ import java.time.Instant;
 
 @Data
 @Entity
-@Table(name = "rating")
+@Table(name = "rating", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "course_id"})
+})
 public class Rating implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

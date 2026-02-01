@@ -27,7 +27,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 无状态 Session
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/auth/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/auth/**",
+                                "/swagger-ui/**",      // 静态资源
+                                "/swagger-ui.html",    // 入口页面
+                                "/v3/api-docs/**",     // OpenAPI 文档接口
+                                "/webjars/**"          // 内部引用的 webjars
+                        ).permitAll()
                         .requestMatchers("/course", "/course/**").authenticated()
                         .requestMatchers("/protected/**").authenticated()
                         .anyRequest().authenticated()

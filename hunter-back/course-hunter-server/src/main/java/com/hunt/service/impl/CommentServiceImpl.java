@@ -13,7 +13,6 @@ import com.hunt.entity.User;
 import com.hunt.enumerate.TargetType;
 import com.hunt.service.CommentService;
 import com.hunt.vo.CommentVO;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Save comment entity into database
+     *
      * @param commentDTO content, targetId, targetType
      * @return saved Entity
      */
@@ -45,7 +44,6 @@ public class CommentServiceImpl implements CommentService {
     public CommentVO save(CommentDTO commentDTO) throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String googleId = authentication.getName();
 
         User user = userDAO.findByGoogleId(googleId)
@@ -59,15 +57,15 @@ public class CommentServiceImpl implements CommentService {
         // Get enum TargetType
         TargetType type = TargetType.fromValue(Integer.parseInt(commentDTO.getTargetType()));
 
-        switch (type){
+        switch (type) {
             case TEACHER:
                 Teacher teacher = teacherDAO.findById(commentDTO.getTargetId())
-                        .orElseThrow(()-> new RuntimeException(ExceptionMessageConstant.TEACHER_NOT_FOUND));
+                        .orElseThrow(() -> new RuntimeException(ExceptionMessageConstant.TEACHER_NOT_FOUND));
                 comment.setTeacher(teacher);
                 break;
             case COURSE:
-                Course course =  courseDAO.findById(commentDTO.getTargetId())
-                        .orElseThrow(()-> new RuntimeException(ExceptionMessageConstant.COURSE_NOT_FOUND));
+                Course course = courseDAO.findById(commentDTO.getTargetId())
+                        .orElseThrow(() -> new RuntimeException(ExceptionMessageConstant.COURSE_NOT_FOUND));
                 comment.setCourse(course);
                 break;
             default:
@@ -75,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
         }
 
         commentDAO.save(comment);
-        
+
         // Manual mapping to ensure user info is included
         CommentVO vo = new CommentVO();
         BeanUtils.copyProperties(comment, vo);
@@ -87,6 +85,7 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Logical Delete, not physical delete
+     *
      * @param id
      */
     @Override

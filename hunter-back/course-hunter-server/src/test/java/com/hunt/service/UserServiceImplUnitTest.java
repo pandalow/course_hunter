@@ -14,8 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+
 
 import java.util.Optional;
 
@@ -23,8 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ActiveProfiles("test")
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplUnitTest {
     @Mock
@@ -47,11 +45,10 @@ public class UserServiceImplUnitTest {
     void setUp(){
         this.mockCode = "google_mock_code";
         this.mockEmail = "test@gmail.com";
-        this.existingUser = User.builder()
-                .id(1L)
-                .email(mockEmail)
-                .name("HUNT")
-                .build();
+        this.existingUser = new User();
+        this.existingUser.setId(1L);
+        this.existingUser.setEmail(mockEmail);
+        this.existingUser.setName("HUNT");
 
         this.mockIdToken = mock(GoogleIdToken.class);
         this.payload = new GoogleIdToken.Payload();

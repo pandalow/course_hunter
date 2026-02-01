@@ -8,7 +8,6 @@ import com.hunt.service.CourseService;
 import com.hunt.vo.CourseVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -50,7 +49,7 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "12") Integer pageSize,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection,
-            @RequestParam(required = false, defaultValue = "commentsCount") String sortBy) {
+            @RequestParam(required = false, defaultValue = "commentCount") String sortBy) {
 
         CoursePageQueryDTO pageQueryDTO = CoursePageQueryDTO.builder()
                 .page(page)
@@ -65,6 +64,11 @@ public class CourseController {
         return Result.success(courses);
     }
 
+    /**
+     * Search Course through SBERT integration services;
+     * @param query
+     * @return
+     */
     @GetMapping("/find")
     public Result<PageResult<CourseVO>> searchCourse(@RequestParam("query") String query) {
         PageResult<CourseVO> courses = courseService.getCourseByQuery(query);
