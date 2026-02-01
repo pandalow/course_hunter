@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+/**
+ * Rating Service Implementation
+ */
 @Service
 @RequiredArgsConstructor
 public class RatingServiceImpl implements RatingService {
@@ -79,7 +81,8 @@ public class RatingServiceImpl implements RatingService {
     }
 
     /**
-     * @param id
+     * Logical Delete, not physical delete
+     * @param id rating id
      */
     @Override
     @Transactional
@@ -98,8 +101,9 @@ public class RatingServiceImpl implements RatingService {
     }
 
     /**
-     * @param ratingDTO
-     * @return
+     * Update rating content and score
+     * @param ratingDTO rating DTO
+     * @return RatingVO
      */
     @Override
     @Transactional
@@ -121,6 +125,12 @@ public class RatingServiceImpl implements RatingService {
         return covertToVO(rating);
     }
 
+    /**
+     * Get ratings by courseId
+     *
+     * @param courseId courseId
+     * @return List of RatingVO
+     */
     @Override
     @Transactional(readOnly = true)
     public List<RatingVO> getRatings(Long courseId) {

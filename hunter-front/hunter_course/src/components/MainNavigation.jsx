@@ -36,12 +36,14 @@ export default function MainNavigation() {
     const handleGoogleLogin = async (credentialResponse) => {
         try {
             const response = await googleLogin(credentialResponse);
-            setUser({
+            const userData = {
                 id: response.id,
                 name: response.name,
                 email: response.email,
                 avatar: response.avatar
-            });
+            };
+            setUser(userData);
+            localStorage.setItem('user_info', JSON.stringify(userData));
         } catch (error) {
             console.log("Error");
         }

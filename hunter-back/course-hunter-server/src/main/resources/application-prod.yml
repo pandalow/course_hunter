@@ -1,0 +1,20 @@
+hunt:
+  datasource:
+    mysql:
+      host: db
+      port: 3306
+      database: mockhunter
+      username: root
+      password: 03279891zxj
+    redis:
+      host: redis
+      port: 6379
+      password: 123456
+      database: 0
+  security:
+    oauth2:
+      client-id: 234209469090-fjp91clg376k25enntk48kpaqscinutt.apps.googleusercontent.com
+      secret: MTY4YmI5N2VjYmI0ZDUwM2M0YWU1Y2I4YTM0YzVjZDY3Mjk2YmYyM2Q4ZGQyNTVhN2U3YjFhM2Y0ODk1MGExYg==
+      expiration: 86400000
+
+

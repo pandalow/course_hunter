@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * REST API for course
+ * Course Controller
  */
 @Slf4j
 @RestController
@@ -29,7 +29,7 @@ public class CourseController {
      */
     @GetMapping("/{id}")
     public Result getCourseById(@PathVariable Long id) {
-        Course course = courseService.getCourseById(id);
+       CourseVO course = courseService.getCourseById(id);
         return Result.success(course);
     }
 
@@ -65,9 +65,9 @@ public class CourseController {
     }
 
     /**
-     * Search Course through SBERT integration services;
+     * Search Course through S-BERT integration services;
      * @param query
-     * @return
+     * @return List of CourseVO matching the search query;
      */
     @GetMapping("/find")
     public Result<PageResult<CourseVO>> searchCourse(@RequestParam("query") String query) {

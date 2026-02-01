@@ -1,4 +1,4 @@
-package com.hunt.service;
+package com.hunt.unit.service;
 
 import com.hunt.dao.CourseDAO;
 import com.hunt.dao.RatingDAO;

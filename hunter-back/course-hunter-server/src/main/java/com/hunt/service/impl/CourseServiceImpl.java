@@ -27,6 +27,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Course Service Implementation
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -42,10 +45,11 @@ public class CourseServiceImpl implements CourseService {
      * @return Course
      */
     @Override
-    public Course getCourseById(Long id) {
-        Optional<Course> course = courseDAO.findById(id);
-        return course.orElseThrow(() ->
-                new EntityNotFoundException(ExceptionMessageConstant.COURSE_NOT_FOUND));
+    public CourseVO getCourseById(Long id) {
+        Course course = courseDAO.findById(id).orElseThrow(
+                ()-> new EntityNotFoundException(ExceptionMessageConstant.COURSE_NOT_FOUND));
+
+        return CopyUtil.copyProperties(course, CourseVO.class);
     }
 
     /**
@@ -89,7 +93,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     /**
-     *
+     * Search Course through S-BERT integration services;
      *
      * @param query
      * @return

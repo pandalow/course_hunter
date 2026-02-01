@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Comment Service Implementation
+ */
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -104,6 +107,13 @@ public class CommentServiceImpl implements CommentService {
         commentDAO.save(comment);
     }
 
+    /**
+     * Get comments by targetId and targetType
+     *
+     * @param targetId   courseId or teacherId
+     * @param targetType TargetType enum value as String
+     * @return List of CommentVO
+     */
     @Override
     public List<CommentVO> getComments(Long targetId, String targetType) {
         TargetType type = TargetType.fromValue(Integer.parseInt(targetType));

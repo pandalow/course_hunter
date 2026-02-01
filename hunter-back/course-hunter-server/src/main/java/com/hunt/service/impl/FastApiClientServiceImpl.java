@@ -7,6 +7,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+/**
+ * FastAPI Client Service Implementation
+ */
 @Service
 public class FastApiClientServiceImpl {
     private final WebClient webClient;

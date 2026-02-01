@@ -32,12 +32,12 @@ export default function CourseCard({ course }) {
                         {/* Rating Badge */}
                         <div className="flex items-center gap-1.5 bg-yellow-500/10 px-2.5 py-1 rounded-full border border-yellow-500/20 self-start sm:self-center shrink-0">
                             <span className="text-sm">⭐</span>
-                            <span className="text-sm font-bold text-yellow-500">{course.rating}</span>
+                            <span className="text-sm font-bold text-yellow-500">{course.avgScore || course.rating || 'N/A'}</span>
                         </div>
                     </div>
 
                     <p className="text-slate-400 text-sm line-clamp-2 mt-1">
-                        {course.description || 'No description available for this course.'}
+                        {course.comments || course.description || 'No description available for this course.'}
                     </p>
 
                     <div className="mt-auto pt-3 flex flex-wrap items-center justify-between text-xs text-slate-500 font-medium">
@@ -53,7 +53,7 @@ export default function CourseCard({ course }) {
                              )}
                         </div>
                         <span className="group-hover:text-blue-400 transition-colors">
-                            {course.comments || 0} Comments
+                            {course.commentCount || 0} Comments
                         </span>
                     </div>
                 </div>

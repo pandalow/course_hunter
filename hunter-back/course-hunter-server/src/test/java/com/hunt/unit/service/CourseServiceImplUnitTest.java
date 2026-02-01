@@ -1,4 +1,4 @@
-package com.hunt.service;
+package com.hunt.unit.service;
 
 import com.hunt.service.impl.CourseServiceImpl;
 import com.hunt.service.impl.FastApiClientServiceImpl;

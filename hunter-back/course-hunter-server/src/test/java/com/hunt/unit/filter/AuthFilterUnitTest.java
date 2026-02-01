@@ -1,4 +1,4 @@
-package com.hunt.filter;
+package com.hunt.unit.filter;
 
 
 import com.hunt.utils.JwtUtils;

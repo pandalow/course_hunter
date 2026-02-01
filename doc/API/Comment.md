@@ -42,8 +42,6 @@ Submits a user comment for a specific target (Course or Teacher). The system aut
 
 
 
-
-
 ---
 
 ### 2. Delete a Comment

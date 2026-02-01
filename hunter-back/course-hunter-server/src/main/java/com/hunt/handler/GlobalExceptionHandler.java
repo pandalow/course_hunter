@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
 
+/**
+ * Global Exception Handler
+ */
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -16,7 +19,6 @@ public class GlobalExceptionHandler {
         log.error("error message：{}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
-
     @ExceptionHandler
     public Result ex(SQLException ex) {
         return Result.error(ex.getMessage());

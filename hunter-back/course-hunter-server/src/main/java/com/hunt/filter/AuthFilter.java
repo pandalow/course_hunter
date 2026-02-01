@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,13 +19,23 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 
+ * Authentication Filter for JWT validation
  */
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class AuthFilter extends OncePerRequestFilter {
     final private JwtUtils jwtUtils;
 
+    /**
+     * Filter to validate JWT from Authorization header
+     *
+     * @param request     HTTP request
+     * @param response    HTTP response
+     * @param filterChain filter chain
+     * @throws ServletException servlet exception
+     * @throws IOException      IO exception
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -33,8 +44,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userEmail;
 
+        // If no auth header or doesn't start with Bearer, continue without authentication
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
@@ -46,12 +57,9 @@ public class AuthFilter extends OncePerRequestFilter {
             Claims claims = jwtUtils.extractAllClaims(jwt);
             String googleId = claims.getSubject();
             String role = (String)claims.get("role");
+            
             if(googleId != null && SecurityContextHolder.getContext().getAuthentication() == null){
-
-                // Create a verification credential
-                // 参数1：Principal（当事人，通常是 email 或 User 对象）
-                // 参数2：Credentials（凭证，JWT 场景下传 null 即可）
-                // 参数3：Authorities（权限列表，可以从 Claims 里的 Role 转换而来）
+                // Create authentication token with user details
                 List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_"+role));
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -63,10 +71,14 @@ public class AuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }catch (Exception e){
-            logger.warn("JWT validation failed: " + e.getMessage());
+            // JWT validation failed - log and continue without authentication
+            // This allows public endpoints to work even with invalid/expired tokens
+            log.warn("JWT validation failed for request to {}: {}", request.getRequestURI(), e.getMessage());
+            // Clear any existing authentication
+            SecurityContextHolder.clearContext();
         }
 
-        // 继续执行请求
+        // Continue filter chain
         filterChain.doFilter(request, response);
     }
 }

@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
 
-
+/**
+ * Google Auth Configuration
+ */
 @Configuration
 public class GoogleAuthConfig {
 

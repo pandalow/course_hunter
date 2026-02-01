@@ -21,7 +21,7 @@ public class AuthController {
     private final UserService userService;
 
     /**
-     * Automatically login or register
+     * Authenticate user via Google Oauth 2.0
      *
      * @param payload contains Oauth 2.0 verification code
      * @return userVO including app-tokens
@@ -36,13 +36,17 @@ public class AuthController {
     /**
      * Get authentication id (google ID) from SecurityContext
      * Helper function to optimizing automate login logic
+     * @return UserVO of current authenticated user
      */
     @GetMapping("/me")
     public Result<UserVO> getCurrentUser(){
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated() ||
-         authentication instanceof AnonymousAuthenticationToken){
+        Authentication authentication = SecurityContextHolder
+                                            .getContext()
+                                            .getAuthentication();
+        if(authentication == null 
+            || !authentication.isAuthenticated() 
+            || authentication instanceof AnonymousAuthenticationToken){
             return Result.error("Not Authenticated");
         }
 

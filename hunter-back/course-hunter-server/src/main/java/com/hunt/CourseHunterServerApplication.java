@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication(scanBasePackages = "com.hunt")
 @EnableCaching // Using Spring Cache to manage Redis
 @EnableTransactionManagement // Transactional management
-
 public class CourseHunterServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(CourseHunterServerApplication.class, args);

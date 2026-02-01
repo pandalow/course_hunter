@@ -22,13 +22,9 @@ public class Rating implements Serializable {
   @Column(name = "content")
   private String content;
 
-  @Column(name = "user_id")
-  private Long userId;
-
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  @JoinColumn(name = "user_id", nullable = false)
   private User user;
-
   //
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "course_id")

@@ -14,11 +14,12 @@ export default function CourseList({ search }) {
         const loadCourses = async () => {
             setLoading(true);
             try {
-                const data = search ? await searchCourses(search) : await fetchCourses(page, pageSize, search);
+                const data = search ? await searchCourses(search) : await fetchCourses(page, pageSize);
                 setCourses(data);
                 setError(null);
             } catch (err) {
                 setError('Failed to load courses. Please try again later.');
+                console.error('Error loading courses:', err);
             } finally {
                 setLoading(false);
             }

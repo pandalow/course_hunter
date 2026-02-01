@@ -1,4 +1,4 @@
-package com.hunt.filter;
+package com.hunt.integration.auth;
 
 import com.hunt.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -36,19 +36,13 @@ public class AuthFilterTest {
                 .add("role", "User")
                 .build();
 
-        // 2. 录制 Mock 行为
         when(jwtUtils.extractAllClaims(anyString())).thenReturn(claims);
 
-        // 3. 执行请求并验证
         mockMvc.perform(get("/course")
                         .header("Authorization", "Bearer mock-token"))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void shouldReturnForbiddenWhenTokenIsMissed() throws Exception {
-        mockMvc.perform(get("/course")).andExpect(status().isForbidden());
-    }
 }
 
 

@@ -1,5 +1,6 @@
 package com.hunt.controller;
 
+import com.hunt.constant.MessageConstant;
 import com.hunt.dto.RatingDTO;
 import com.hunt.result.PageResult;
 import com.hunt.result.Result;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Rating Controller
+ */
 @Slf4j
 @RestController
 @RequestMapping("/ratings")
@@ -23,7 +27,7 @@ public class RatingController {
     /**
      * Create a Review Rating
      *
-     * @param ratingDTO cotains targetID, targetType, score, content
+     * @param ratingDTO contains targetID, targetType, score, content
      * @return RatingVO been success
      */
     @PostMapping
@@ -36,25 +40,38 @@ public class RatingController {
 
     /**
      * Delete a Review Rating
-     *
+     *  @param id Rating ID
+     * @return Success Message
      */
     @DeleteMapping("/{id}")
     public Result<String> deleteRating(@PathVariable Long id){
-        log.info("Deleted Id"  + id);
+        log.info("Deleted Id: "  + id);
 
         ratingService.delete(id);
-        return Result.success("Delete Success");
+        return Result.success(MessageConstant.DELETE_SUCCESS);
     }
 
+    /**
+     * Update a Review Rating
+     *
+     * @param ratingDTO contains id, score, content
+     * @return Updated RatingVO
+     */
     @PutMapping
     public Result<RatingVO> updateRating(@RequestBody RatingDTO ratingDTO){
         RatingVO ratingVO = ratingService.update(ratingDTO);
         return Result.success(ratingVO);
     }
 
+    /**
+     * Get Ratings by Course ID
+     *
+     * @param courseId Course ID
+     * @return List of RatingVO
+     */
     @GetMapping("/course/{courseId}")
-    public Result<List<RatingVO>> getRating(@PathVariable Long course_id){
-        List<RatingVO> vos = ratingService.getRatings(course_id);
+    public Result<List<RatingVO>> getRating(@PathVariable Long courseId){
+        List<RatingVO> vos = ratingService.getRatings(courseId);
         return Result.success(vos);
     }
 }

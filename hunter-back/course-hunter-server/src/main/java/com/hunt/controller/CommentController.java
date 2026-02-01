@@ -1,5 +1,6 @@
 package com.hunt.controller;
 
+import com.hunt.constant.MessageConstant;
 import com.hunt.dto.CommentDTO;
 import com.hunt.result.Result;
 import com.hunt.service.CommentService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/** Comment Controller */
 @Slf4j
 @RestController
 @RequestMapping("/comment")
@@ -20,6 +22,7 @@ public class CommentController {
 
     /**
      * Create Comment
+     *
      * @param commentDTO cotains content, targetId, targetType
      */
     @PostMapping
@@ -31,8 +34,8 @@ public class CommentController {
 
     /**
      * Get comments by targetId and targetType
-     * @param targetId
-     * @param targetType
+     * @param targetId Target entity ID
+     * @param targetType Target entity type 1 = 'Teacher', 2 = 'Course'
      * @return List of CommentVO
      */
     @GetMapping
@@ -52,6 +55,6 @@ public class CommentController {
         log.info("Request id: " + id);
         commentService.delete(id);
 
-        return Result.success("Comment deleted successfully");
+        return Result.success(MessageConstant.DELETE_SUCCESS);
     }
 }

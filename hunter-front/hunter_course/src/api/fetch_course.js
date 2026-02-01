@@ -1,26 +1,27 @@
 import api from './axios'
 
-export const fetchCourses = async (page=1,pageSize=5,search='') => {
-    const response = await api.get('/course',{
+export const fetchCourses = async (page=1, pageSize=12, sortBy='commentCount', sortDirection='desc') => {
+    const response = await api.get('/course', {
         params: {
             page: page,
-            size: pageSize,
-            search: search
+            pageSize: pageSize,
+            sortBy: sortBy,
+            sortDirection: sortDirection
         }
     })
     
-    const data = response.data.data.records
-    return data
+    const data = response.data.data;
+    return data.content || data.records || data;
 }
 
 export const searchCourses = async (query) => {
-    const response = await api.get('/course/find',{
+    const response = await api.get('/course/find', {
         params: {
             query: query
         }
     })
-    const data = response.data.data.records
-    return data
+    const data = response.data.data;
+    return data.content || data.records || data;
 }
 
 

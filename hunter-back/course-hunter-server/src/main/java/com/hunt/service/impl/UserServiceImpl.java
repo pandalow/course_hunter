@@ -16,7 +16,9 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
+/**
+ * User Service Implementation
+ */
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -33,15 +35,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserVO handleGoogleOAuth(String code) throws Exception {
-        // Verified credential code;
+        // 1. Verified credential code;
         GoogleIdToken idToken = verifier.verify(code); // Already instanced by a BEAN in GoogleAuthConfig
         if(idToken == null){
             throw new RuntimeException(ExceptionMessageConstant.WRONG_CREDENTIALS);
         }
 
-        // 2. 自动注册/登录（核心业务逻辑）：
-        //      查库：拿着 Token 里的 Email 去数据库里搜。
-        //      注册：如果搜不到，就直接用 Google 提供的信息（姓名、头像、Email）新建一个 User 记录.
+
+        // 2. Automatic Register/Login (Core Business Logic):
+        //      Find User by Google ID in Token
+        //      If found, Login;
+        //      If not found, Register a new User;
+        
         Payload payload = idToken.getPayload();
 
         String userId = payload.getSubject();
@@ -75,6 +80,12 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    /**
+     * Get UserVO by googleId
+     *
+     * @param googleId Google ID from OAuth
+     * @return UserVO
+     */
     @Override
     public UserVO getUserByGoogleId(String googleId) {
         System.out.println(googleId);
