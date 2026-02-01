@@ -58,6 +58,5 @@ jobs:
       - name: Build Backend Image (Dry Run)
         run: docker build ./hunter-back -t hunter-api:test
 
-      # 模拟构建前端镜像
       - name: Build Frontend Image (Dry Run)
         run: docker build ./hunter-front/hunter_course -t hunter-web:test
