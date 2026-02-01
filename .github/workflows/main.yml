@@ -49,13 +49,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # 调试步骤：如果这一步列出的文件里没有 docker-compose.yml，说明 checkout 失败或路径不对
+      - name: Check file existence
+        run: ls -la
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Verify Docker Compose Config
-        run: docker compose config
+        # 强制指定当前目录的文件
+        run: docker compose -f ./docker-compose.yml config
 
       - name: Build Backend Image (Dry Run)
+        # 注意：这里要确保 hunter-back 目录下有 Dockerfile
         run: docker build ./hunter-back -t hunter-api:test
 
       - name: Build Frontend Image (Dry Run)
