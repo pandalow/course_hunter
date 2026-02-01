@@ -1,6 +1,6 @@
 import api from './axios'
 
-export const fetchCourses = async (page=1, pageSize=12, sortBy='commentCount', sortDirection='desc') => {
+export const fetchCourses = async (page=1, pageSize=12, sortBy='id', sortDirection='desc') => {
     const response = await api.get('/course', {
         params: {
             page: page,

@@ -41,7 +41,7 @@ public class CourseController {
      * @param pageSize      not required, set default 20;
      * @param search        not required, used to search value
      * @param sortDirection set default by asc
-     * @param sortBy        set default by comments_count
+     * @param sortBy        set default by id (changed from commentCount which is a @Formula field and cannot be sorted)
      * @return Card information which display on the home page
      */
     @GetMapping
@@ -49,7 +49,7 @@ public class CourseController {
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "12") Integer pageSize,
             @RequestParam(required = false, defaultValue = "asc") String sortDirection,
-            @RequestParam(required = false, defaultValue = "commentCount") String sortBy) {
+            @RequestParam(required = false, defaultValue = "id") String sortBy) {
 
         CoursePageQueryDTO pageQueryDTO = CoursePageQueryDTO.builder()
                 .page(page)
