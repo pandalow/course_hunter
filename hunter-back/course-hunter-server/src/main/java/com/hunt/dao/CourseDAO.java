@@ -31,7 +31,7 @@ public interface CourseDAO extends JpaRepository<Course, Long> {
      * @param ids list of course IDs
      * @return list of courses with related entities
      */
-    @Override
+
     @NonNull
     @EntityGraph(attributePaths = {"teachers", "institution", "country"})
     List<Course> findAllByIdIn(@NonNull List<Long> ids);
